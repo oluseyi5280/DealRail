@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DealRail — you're losing deals in your inbox</title>
+<meta name="description" content="DealRail is a done-for-you sales desk for agencies and consultancies of 5–20 people. We handle intake, qualification, routing, chasing, closing and handoff. Paid on commission when deals close.">
+<style>
+  :root {
+    --ink: #11151a;
+    --muted: #5b6572;
+    --line: #e3e6eb;
+    --accent: #0f5bd7;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: #fff;
+  }
+  .wrap { max-width: 38rem; margin: 0 auto; padding: 1.5rem 1.25rem; }
+  .site-header { border-bottom: 1px solid var(--line); }
+  .brand { font-weight: 700; letter-spacing: -0.01em; }
+  h1 {
+    font-size: 1.875rem;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    margin: 2rem 0 0.75rem;
+  }
+  h2 { font-size: 1.125rem; letter-spacing: -0.01em; margin: 2.5rem 0 0.75rem; }
+  p { margin: 0 0 1rem; }
+  .lede { font-size: 1.125rem; }
+  .muted { color: var(--muted); font-size: 0.9375rem; }
+  ol.flow { list-style: none; margin: 0; padding: 0; }
+  ol.flow li { padding: 0.875rem 0; border-top: 1px solid var(--line); }
+  ol.flow li:last-child { border-bottom: 1px solid var(--line); }
+  form { margin-top: 1.75rem; }
+  label { display: block; font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.375rem; }
+  input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 0.875rem;
+    font: inherit;
+    font-size: 1rem;
+    color: inherit;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  input[type="email"]:focus-visible,
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 0.625rem;
+    padding: 0.875rem 1rem;
+    font: inherit;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button[disabled] { opacity: 0.6; cursor: default; }
+  #form-status { min-height: 1.5rem; margin: 0.75rem 0 0; font-size: 0.9375rem; color: var(--muted); }
+  footer { border-top: 1px solid var(--line); margin-top: 3rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <span class="brand">DealRail</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <h1>You're losing deals in your inbox.</h1>
+  <p class="lede">We chase, qualify, and close them for you.</p>
+  <p class="muted">A done-for-you sales desk for agencies and consultancies of 5–20 people. No new hires, no CRM migration, no retainer.</p>
+
+  <form id="waitlist" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="post">
+    <label for="email">Work email</label>
+    <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@youragency.com">
+    <input type="hidden" name="_subject" value="DealRail waitlist signup">
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+    <button type="submit">Join the waitlist</button>
+    <p id="form-status" role="status" aria-live="polite"></p>
+  </form>
+  <p class="muted">One email when we open spots. Nothing else.</p>
+
+  <section aria-labelledby="how-heading">
+    <h2 id="how-heading">How DealRail works</h2>
+    <ol class="flow">
+      <li><strong>Intake &amp; qualification.</strong> Every enquiry that lands in your inbox is logged within the hour and qualified against your real criteria — budget, timeline, fit.</li>
+      <li><strong>Routing &amp; chasing.</strong> Qualified leads go to the right person on your team, and we follow up from your address until they reply, book, or opt out.</li>
+      <li><strong>Closing &amp; handoff.</strong> We run the back-and-forth through to a signed scope, then hand the deal to your delivery team with the full thread and notes.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="cost-heading">
+    <h2 id="cost-heading">What it costs</h2>
+    <p>We take a percentage of the deal value when it closes — no retainer, no setup fee, nothing owed on deals that don't land.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="muted">DealRail — chasing, qualifying and closing for small agencies and consultancies.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var form = document.getElementById('waitlist');
+    var status = document.getElementById('form-status');
+    var button = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      var data = new FormData(form);
+      status.textContent = 'Adding you…';
+      button.disabled = true;
+
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' }
+      })
+        .then(function (response) {
+          if (response.ok) {
+            form.reset();
+            status.textContent = "You're on the list. We'll email you when spots open.";
+          } else {
+            return response.json().then(function (body) {
+              var detail = body && body.errors ? body.errors.map(function (e) { return e.message; }).join(' ') : '';
+              status.textContent = detail || "That didn't go through. Please try again.";
+            }, function () {
+              status.textContent = "That didn't go through. Please try again.";
+            });
+          }
+        })
+        .catch(function () {
+          status.textContent = "That didn't go through — check your connection and try again.";
+        })
+        .then(function () {
+          button.disabled = false;
+        });
+    });
+  })();
+</script>
+
+</body>
+</html>
