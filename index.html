@@ -1,161 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DealRail — you're losing deals in your inbox</title>
-<meta name="description" content="DealRail is a done-for-you sales desk for agencies and consultancies of 5–20 people. We handle intake, qualification, routing, chasing, closing and handoff. Paid on commission when deals close.">
+<title>You're losing deals in your inbox — we close them</title>
+<meta name="description" content="For agencies of 5–20 people: we chase, qualify, and close the inbound leads your inbox is quietly killing. Commission only.">
+<meta name="theme-color" content="#ffffff">
 <style>
-  :root {
-    --ink: #11151a;
-    --muted: #5b6572;
-    --line: #e3e6eb;
-    --accent: #0f5bd7;
+  :root{
+    --ink:#111418;
+    --muted:#5b636e;
+    --line:#e3e6ea;
+    --accent:#0b6b3a;
+    --bg:#ffffff;
   }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.55;
-    color: var(--ink);
-    background: #fff;
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
-  .wrap { max-width: 38rem; margin: 0 auto; padding: 1.5rem 1.25rem; }
-  .site-header { border-bottom: 1px solid var(--line); }
-  .brand { font-weight: 700; letter-spacing: -0.01em; }
-  h1 {
-    font-size: 1.875rem;
-    line-height: 1.18;
-    letter-spacing: -0.02em;
-    margin: 2rem 0 0.75rem;
+  main{max-width:640px;margin:0 auto;padding:24px 20px 56px}
+  .mark{
+    display:inline-block;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--muted);
+    text-decoration:none;
+    margin-bottom:28px;
   }
-  h2 { font-size: 1.125rem; letter-spacing: -0.01em; margin: 2.5rem 0 0.75rem; }
-  p { margin: 0 0 1rem; }
-  .lede { font-size: 1.125rem; }
-  .muted { color: var(--muted); font-size: 0.9375rem; }
-  ol.flow { list-style: none; margin: 0; padding: 0; }
-  ol.flow li { padding: 0.875rem 0; border-top: 1px solid var(--line); }
-  ol.flow li:last-child { border-bottom: 1px solid var(--line); }
-  form { margin-top: 1.75rem; }
-  label { display: block; font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.375rem; }
-  input[type="email"] {
-    width: 100%;
-    padding: 0.75rem 0.875rem;
-    font: inherit;
-    font-size: 1rem;
-    color: inherit;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 8px;
+  h1{
+    font-size:clamp(1.6rem,7vw,2.4rem);
+    line-height:1.18;
+    letter-spacing:-.02em;
+    margin:0 0 12px;
   }
-  input[type="email"]:focus-visible,
-  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  button {
-    width: 100%;
-    min-height: 48px;
-    margin-top: 0.625rem;
-    padding: 0.875rem 1rem;
-    font: inherit;
-    font-weight: 600;
-    color: #fff;
-    background: var(--accent);
-    border: 0;
-    border-radius: 8px;
-    cursor: pointer;
+  h1 span{color:var(--accent)}
+  .lede{
+    font-size:1.0625rem;
+    color:var(--muted);
+    margin:0 0 36px;
   }
-  button[disabled] { opacity: 0.6; cursor: default; }
-  #form-status { min-height: 1.5rem; margin: 0.75rem 0 0; font-size: 0.9375rem; color: var(--muted); }
-  footer { border-top: 1px solid var(--line); margin-top: 3rem; }
+  h2{
+    font-size:.8125rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--muted);
+    margin:0 0 16px;
+  }
+  ol.stages{
+    list-style:none;
+    margin:0 0 24px;
+    padding:0;
+    counter-reset:stage 1;
+  }
+  ol.stages li{
+    position:relative;
+    padding:0 0 0 34px;
+    margin-bottom:18px;
+  }
+  ol.stages li::before{
+    counter-increment:stage;
+    content:counter(stage);
+    position:absolute;
+    left:0;
+    top:1px;
+    width:22px;
+    height:22px;
+    border:1px solid var(--line);
+    border-radius:50%;
+    font-size:12px;
+    font-weight:700;
+    line-height:20px;
+    text-align:center;
+    color:var(--muted);
+  }
+  ol.stages strong{color:var(--ink)}
+  .commission{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:18px 0;
+    margin:0 0 40px;
+    font-size:.9375rem;
+  }
+  form.waitlist{margin:0}
+  label{
+    display:block;
+    font-size:.8125rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  input[type=email]{
+    display:block;
+    width:100%;
+    padding:14px 14px;
+    font:inherit;
+    color:var(--ink);
+    background:#fff;
+    border:1px solid #c9ced6;
+    border-radius:8px;
+    -webkit-appearance:none;
+  }
+  input[type=email]:focus{
+    outline:2px solid var(--accent);
+    outline-offset:1px;
+    border-color:var(--accent);
+  }
+  button{
+    display:block;
+    width:100%;
+    margin-top:10px;
+    padding:15px 14px;
+    font:inherit;
+    font-weight:700;
+    color:#fff;
+    background:var(--accent);
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  button:hover{background:#084f2b}
+  .note{
+    font-size:.8125rem;
+    color:var(--muted);
+    margin:12px 0 0;
+  }
+  .hp{
+    position:absolute;
+    left:-9999px;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+  }
+  footer{
+    margin-top:48px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-size:.8125rem;
+    color:var(--muted);
+  }
+  @media (min-width:640px){
+    main{padding:40px 24px 72px}
+    form.waitlist{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+    .field{flex:1 1 260px}
+    button{width:auto;margin-top:0;padding:15px 24px}
+    .note{flex-basis:100%;margin-top:2px}
+  }
 </style>
 </head>
 <body>
+<main>
 
-<header class="site-header">
-  <div class="wrap">
-    <span class="brand">DealRail</span>
-  </div>
-</header>
+  <!-- Replace with your brand name -->
+  <a class="mark" href="/">Close&nbsp;Desk</a>
 
-<main class="wrap">
+  <h1>You're losing deals in your inbox. <span>We chase, qualify, and close them.</span></h1>
+  <p class="lede">For agencies of 5–20 people who do great work but have nobody whose job is sales.</p>
 
-  <h1>You're losing deals in your inbox.</h1>
-  <p class="lede">We chase, qualify, and close them for you.</p>
-  <p class="muted">A done-for-you sales desk for agencies and consultancies of 5–20 people. No new hires, no CRM migration, no retainer.</p>
+  <h2>How it works</h2>
+  <ol class="stages">
+    <li><strong>We catch and qualify.</strong> Every inbound lead gets a reply within minutes, then a real budget-and-timeline test — no tyre-kickers.</li>
+    <li><strong>We scope and pitch.</strong> We run the discovery call, write the proposal in your voice and your pricing, and follow up until there's a yes or a no.</li>
+    <li><strong>We negotiate and hand over.</strong> We handle the back-and-forth, get the signature, and brief you on a client who's ready to start.</li>
+  </ol>
 
-  <form id="waitlist" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="post">
-    <label for="email">Work email</label>
-    <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@youragency.com">
-    <input type="hidden" name="_subject" value="DealRail waitlist signup">
-    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+  <p class="commission">We take a percentage of each deal we close. No retainer, no setup fee, no invoice until you've been paid.</p>
+
+  <!-- Replace the action URL with your own hosted form endpoint (e.g. Formspree, Basin, Tally) -->
+  <form class="waitlist" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="POST">
+    <div class="field">
+      <label for="email">Get on the waitlist</label>
+      <input id="email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@youragency.com">
+    </div>
+    <input type="hidden" name="_subject" value="New waitlist signup">
+    <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button type="submit">Join the waitlist</button>
-    <p id="form-status" role="status" aria-live="polite"></p>
+    <p class="note">One email when a slot opens. Nothing else.</p>
   </form>
-  <p class="muted">One email when we open spots. Nothing else.</p>
 
-  <section aria-labelledby="how-heading">
-    <h2 id="how-heading">How DealRail works</h2>
-    <ol class="flow">
-      <li><strong>Intake &amp; qualification.</strong> Every enquiry that lands in your inbox is logged within the hour and qualified against your real criteria — budget, timeline, fit.</li>
-      <li><strong>Routing &amp; chasing.</strong> Qualified leads go to the right person on your team, and we follow up from your address until they reply, book, or opt out.</li>
-      <li><strong>Closing &amp; handoff.</strong> We run the back-and-forth through to a signed scope, then hand the deal to your delivery team with the full thread and notes.</li>
-    </ol>
-  </section>
-
-  <section aria-labelledby="cost-heading">
-    <h2 id="cost-heading">What it costs</h2>
-    <p>We take a percentage of the deal value when it closes — no retainer, no setup fee, nothing owed on deals that don't land.</p>
-  </section>
+  <footer>We work with a handful of agencies at a time, so we can answer the phone.</footer>
 
 </main>
-
-<footer>
-  <div class="wrap">
-    <p class="muted">DealRail — chasing, qualifying and closing for small agencies and consultancies.</p>
-  </div>
-</footer>
-
-<script>
-  (function () {
-    var form = document.getElementById('waitlist');
-    var status = document.getElementById('form-status');
-    var button = form.querySelector('button[type="submit"]');
-
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      var data = new FormData(form);
-      status.textContent = 'Adding you…';
-      button.disabled = true;
-
-      fetch(form.action, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' }
-      })
-        .then(function (response) {
-          if (response.ok) {
-            form.reset();
-            status.textContent = "You're on the list. We'll email you when spots open.";
-          } else {
-            return response.json().then(function (body) {
-              var detail = body && body.errors ? body.errors.map(function (e) { return e.message; }).join(' ') : '';
-              status.textContent = detail || "That didn't go through. Please try again.";
-            }, function () {
-              status.textContent = "That didn't go through. Please try again.";
-            });
-          }
-        })
-        .catch(function () {
-          status.textContent = "That didn't go through — check your connection and try again.";
-        })
-        .then(function () {
-          button.disabled = false;
-        });
-    });
-  })();
-</script>
-
 </body>
 </html>
