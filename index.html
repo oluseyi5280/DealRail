@@ -1,192 +1,36 @@
-<!doctype html>
+Here's a complete, self-contained HTML landing page for DealRail, built with inline CSS and a mobile-first structure. It includes a hero with email capture, How It Works steps, a problem section, a second CTA, and a footer—all with a clean, single-accent design.
+```html
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>You're losing deals in your inbox — we close them</title>
-<meta name="description" content="For agencies of 5–20 people: we chase, qualify, and close the inbound leads your inbox is quietly killing. Commission only.">
-<meta name="theme-color" content="#ffffff">
+<title>DealRail - We chase, qualify, and close the deals in your inbox</title>
+<meta name="description" content="DealRail works the enquiries already sitting in your inbox: we follow up, qualify, and hand you deals that are ready to close. Built for small agencies of 5-20 people. Commission only.">
 <style>
   :root{
-    --ink:#111418;
-    --muted:#5b636e;
-    --line:#e3e6ea;
-    --accent:#0b6b3a;
-    --bg:#ffffff;
+    --ink:#131722;
+    --ink-soft:#4b5266;
+    --accent:#2f5be0;
+    --accent-dark:#2447b4;
+    --accent-tint:rgba(47,91,224,.10);
+    --line:#e4e7ef;
+    --surface:#ffffff;
+    --surface-soft:#f6f7fb;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(19,23,34,.05), 0 10px 24px -8px rgba(19,23,34,.14);
+    --max:900px;
   }
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
+
+  *,*::before,*::after{ box-sizing:border-box; }
+
+  html{ -webkit-text-size-adjust:100%; }
+
   body{
     margin:0;
-    background:var(--bg);
+    background:var(--surface);
     color:var(--ink);
-    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  main{max-width:640px;margin:0 auto;padding:24px 20px 56px}
-  .mark{
-    display:inline-block;
-    font-size:14px;
-    font-weight:700;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    color:var(--muted);
-    text-decoration:none;
-    margin-bottom:28px;
-  }
-  h1{
-    font-size:clamp(1.6rem,7vw,2.4rem);
-    line-height:1.18;
-    letter-spacing:-.02em;
-    margin:0 0 12px;
-  }
-  h1 span{color:var(--accent)}
-  .lede{
-    font-size:1.0625rem;
-    color:var(--muted);
-    margin:0 0 36px;
-  }
-  h2{
-    font-size:.8125rem;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    color:var(--muted);
-    margin:0 0 16px;
-  }
-  ol.stages{
-    list-style:none;
-    margin:0 0 24px;
-    padding:0;
-    counter-reset:stage 1;
-  }
-  ol.stages li{
-    position:relative;
-    padding:0 0 0 34px;
-    margin-bottom:18px;
-  }
-  ol.stages li::before{
-    counter-increment:stage;
-    content:counter(stage);
-    position:absolute;
-    left:0;
-    top:1px;
-    width:22px;
-    height:22px;
-    border:1px solid var(--line);
-    border-radius:50%;
-    font-size:12px;
-    font-weight:700;
-    line-height:20px;
-    text-align:center;
-    color:var(--muted);
-  }
-  ol.stages strong{color:var(--ink)}
-  .commission{
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-    padding:18px 0;
-    margin:0 0 40px;
-    font-size:.9375rem;
-  }
-  form.waitlist{margin:0}
-  label{
-    display:block;
-    font-size:.8125rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.06em;
-    color:var(--muted);
-    margin-bottom:8px;
-  }
-  input[type=email]{
-    display:block;
-    width:100%;
-    padding:14px 14px;
-    font:inherit;
-    color:var(--ink);
-    background:#fff;
-    border:1px solid #c9ced6;
-    border-radius:8px;
-    -webkit-appearance:none;
-  }
-  input[type=email]:focus{
-    outline:2px solid var(--accent);
-    outline-offset:1px;
-    border-color:var(--accent);
-  }
-  button{
-    display:block;
-    width:100%;
-    margin-top:10px;
-    padding:15px 14px;
-    font:inherit;
-    font-weight:700;
-    color:#fff;
-    background:var(--accent);
-    border:0;
-    border-radius:8px;
-    cursor:pointer;
-  }
-  button:hover{background:#084f2b}
-  .note{
-    font-size:.8125rem;
-    color:var(--muted);
-    margin:12px 0 0;
-  }
-  .hp{
-    position:absolute;
-    left:-9999px;
-    width:1px;
-    height:1px;
-    overflow:hidden;
-  }
-  footer{
-    margin-top:48px;
-    padding-top:20px;
-    border-top:1px solid var(--line);
-    font-size:.8125rem;
-    color:var(--muted);
-  }
-  @media (min-width:640px){
-    main{padding:40px 24px 72px}
-    form.waitlist{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
-    .field{flex:1 1 260px}
-    button{width:auto;margin-top:0;padding:15px 24px}
-    .note{flex-basis:100%;margin-top:2px}
-  }
-</style>
-</head>
-<body>
-<main>
-
-  <!-- Replace with your brand name -->
-  <a class="mark" href="/">Close&nbsp;Desk</a>
-
-  <h1>You're losing deals in your inbox. <span>We chase, qualify, and close them.</span></h1>
-  <p class="lede">For agencies of 5–20 people who do great work but have nobody whose job is sales.</p>
-
-  <h2>How it works</h2>
-  <ol class="stages">
-    <li><strong>We catch and qualify.</strong> Every inbound lead gets a reply within minutes, then a real budget-and-timeline test — no tyre-kickers.</li>
-    <li><strong>We scope and pitch.</strong> We run the discovery call, write the proposal in your voice and your pricing, and follow up until there's a yes or a no.</li>
-    <li><strong>We negotiate and hand over.</strong> We handle the back-and-forth, get the signature, and brief you on a client who's ready to start.</li>
-  </ol>
-
-  <p class="commission">We take a percentage of each deal we close. No retainer, no setup fee, no invoice until you've been paid.</p>
-
-  <!-- Replace the action URL with your own hosted form endpoint (e.g. Formspree, Basin, Tally) -->
-  <form class="waitlist" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="POST">
-    <div class="field">
-      <label for="email">Get on the waitlist</label>
-      <input id="email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@youragency.com">
-    </div>
-    <input type="hidden" name="_subject" value="New waitlist signup">
-    <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <button type="submit">Join the waitlist</button>
-    <p class="note">One email when a slot opens. Nothing else.</p>
-  </form>
-
-  <footer>We work with a handful of agencies at a time, so we can answer the phone.</footer>
-
-</main>
-</body>
-</html>
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antiali
