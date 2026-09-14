@@ -1,36 +1,53 @@
-Here's a complete, self-contained HTML landing page for DealRail, built with inline CSS and a mobile-first structure. It includes a hero with email capture, How It Works steps, a problem section, a second CTA, and a footer—all with a clean, single-accent design.
+Here's the complete self-contained HTML file you asked for—a mobile-first, conversion-focused landing page for DealRail, featuring the hero waitlist form, three-step process, feature grid, social proof band, and a second CTA, all with inline CSS and no external dependencies.
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DealRail - We chase, qualify, and close the deals in your inbox</title>
-<meta name="description" content="DealRail works the enquiries already sitting in your inbox: we follow up, qualify, and hand you deals that are ready to close. Built for small agencies of 5-20 people. Commission only.">
-<style>
-  :root{
-    --ink:#131722;
-    --ink-soft:#4b5266;
-    --accent:#2f5be0;
-    --accent-dark:#2447b4;
-    --accent-tint:rgba(47,91,224,.10);
-    --line:#e4e7ef;
-    --surface:#ffffff;
-    --surface-soft:#f6f7fb;
-    --radius:14px;
-    --shadow:0 1px 2px rgba(19,23,34,.05), 0 10px 24px -8px rgba(19,23,34,.14);
-    --max:900px;
-  }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DealRail — You're losing deals in your inbox</title>
+  <meta name="description" content="DealRail is the sales desk for agencies of 5–20 people. We chase, qualify, and close the deals sitting in your inbox." />
+  <style>
+    :root {
+      --ink: #0b1220;
+      --ink-soft: #1c2537;
+      --body: #3d4759;
+      --muted: #67728a;
+      --line: #e4e8ef;
+      --bg: #ffffff;
+      --bg-soft: #f6f8fc;
+      --accent: #1f5eff;
+      --accent-dark: #1444c0;
+      --accent-soft: #ecf1ff;
+      --radius: 16px;
+      --maxw: 1080px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
 
-  *,*::before,*::after{ box-sizing:border-box; }
+    *, *::before, *::after { box-sizing: border-box; }
 
-  html{ -webkit-text-size-adjust:100%; }
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
 
-  body{
-    margin:0;
-    background:var(--surface);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    font-size:17px;
-    line-height:1.65;
-    -webkit-font-smoothing:antiali
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 17px;
+      line-height: 1.62;
+      color: var(--body);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3 {
+      color: var(--ink);
+      line-height: 1.16;
+      letter-spacing: -0.022em;
+      margin: 0 0 0.5em;
+      font-weight: 700;
+    }
+
+    h1 { font-size: clamp(1.9rem, 7.2vw, 3.15rem);
