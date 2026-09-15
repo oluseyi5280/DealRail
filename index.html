@@ -1,278 +1,567 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DealRail — every deal, one live pipeline</title>
+<title>DealRail — Keep every deal on the rail</title>
+<meta name="description" content="DealRail sits on top of your CRM and makes sure every open deal has a stage, an owner, and a next step with a date.">
 <style>
   :root{
-    --ink:#0b1020;
-    --muted:#5a6478;
-    --accent:#5b3df5;
-    --accent-2:#8b7bff;
-    --bg:#f6f7fb;
-    --line:#e4e6f0;
+    --blue-700:#1D4ED8;
+    --blue-600:#2563EB;
+    --blue-500:#3B82F6;
+    --blue-100:#DBEAFE;
+    --blue-50:#EFF5FF;
+    --navy:#0B1B3A;
+    --slate:#4B5773;
+    --line:#E2E8F4;
+    --tint:#F4F8FF;
   }
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html{scroll-behavior:smooth}
+
   body{
-    margin:0;
-    background:#fff;
-    color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    font-size:1rem;
+    color:var(--navy);
+    background:#fff;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+
+  a:focus-visible,button:focus-visible{outline:3px solid rgba(37,99,235,.45);outline-offset:2px;border-radius:8px}
+
+  .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;gap:32px;height:68px}
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;font-size:1.125rem;letter-spacing:-.02em;
+    color:var(--navy);text-decoration:none;
+  }
+  .brand-mark{
+    width:32px;height:32px;border-radius:9px;flex:none;
+    background:linear-gradient(135deg,var(--blue-500),#1E40AF);
+    display:grid;place-items:center;color:#fff;
+    box-shadow:0 4px 12px rgba(37,99,235,.35);
+  }
+  .brand-mark svg{width:18px;height:18px}
+  .nav-links{display:flex;gap:28px;margin-left:auto}
+  .nav-links a{
+    color:var(--slate);text-decoration:none;
+    font-size:.9375rem;font-weight:500;transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--blue-600)}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-family:inherit;font-weight:600;font-size:.9375rem;line-height:1;
+    border-radius:10px;text-decoration:none;padding:13px 22px;
+    border:1px solid transparent;cursor:pointer;
+    transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+  }
+  .btn-primary{background:var(--blue-600);color:#fff;box-shadow:0 6px 18px rgba(37,99,235,.28)}
+  .btn-primary:hover{background:var(--blue-700);transform:translateY(-1px);box-shadow:0 10px 24px rgba(37,99,235,.32)}
+  .btn-lg{padding:16px 30px;font-size:1rem}
+  .btn-sm{padding:10px 18px;font-size:.875rem}
+  .btn svg{width:17px;height:17px}
 
   /* ---------- hero ---------- */
   .hero{
-    position:relative;
-    overflow:hidden;
+    position:relative;overflow:hidden;
+    padding:96px 0;
     background:
-      radial-gradient(820px 420px at 88% -12%, rgba(91,61,245,.18), transparent 70%),
-      linear-gradient(180deg,#ffffff 0%,var(--bg) 100%);
-    padding:clamp(32px,5vw,56px) 0 clamp(64px,9vw,104px);
+      radial-gradient(900px 480px at 80% -12%, rgba(59,130,246,.22), transparent 62%),
+      radial-gradient(620px 420px at 4% 10%, rgba(37,99,235,.10), transparent 60%),
+      #fff;
   }
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;font-size:1.0625rem}
-  .mark{
-    width:30px;height:30px;border-radius:9px;
-    display:grid;place-items:center;color:#fff;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--blue-700);background:var(--blue-50);
+    border:1px solid var(--blue-100);padding:7px 14px;border-radius:999px;
+    margin-bottom:24px;
   }
-  .mark svg{width:18px;height:18px}
-
-  .hero-grid{
-    margin-top:clamp(40px,7vw,72px);
-    display:grid;
-    grid-template-columns:1.1fr .9fr;
-    gap:clamp(32px,5vw,64px);
-    align-items:center;
-  }
+  .eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--blue-500);display:block}
   h1{
-    margin:0 0 16px;
-    font-size:clamp(2.1rem,5.2vw,3.4rem);
-    line-height:1.05;
-    letter-spacing:-.03em;
-    font-weight:800;
+    font-size:clamp(2.25rem,5vw,3.5rem);
+    line-height:1.05;letter-spacing:-.035em;font-weight:800;
   }
-  h1 span{color:var(--accent)}
+  h1 .accent{color:var(--blue-600)}
   .lede{
-    margin:0 0 32px;
-    max-width:38ch;
+    margin-top:24px;
     font-size:clamp(1rem,1.5vw,1.125rem);
-    color:var(--muted);
+    color:var(--slate);max-width:33em;
   }
-  .signup{
-    display:flex;
-    gap:8px;
-    max-width:460px;
-    padding:8px;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:16px;
-    box-shadow:0 18px 40px -28px rgba(11,16,32,.45);
-    transition:border-color .15s, box-shadow .15s;
+  .hero-actions{margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px}
+  .link-arrow{
+    display:inline-flex;align-items:center;gap:8px;
+    color:var(--blue-700);font-weight:600;font-size:.9375rem;text-decoration:none;
   }
-  .signup:focus-within{
-    border-color:var(--accent);
-    box-shadow:0 0 0 4px rgba(91,61,245,.14);
+  .link-arrow svg{width:16px;height:16px;transition:transform .15s ease}
+  .link-arrow:hover svg{transform:translateX(3px)}
+  .trust{
+    margin-top:32px;display:flex;flex-wrap:wrap;gap:12px 24px;
+    list-style:none;font-size:.875rem;color:var(--slate);
   }
-  .signup label{
-    position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;
-  }
-  .signup input{
-    flex:1 1 auto;
-    min-width:0;
-    border:0;
-    outline:0;
-    background:transparent;
-    padding:14px 14px;
-    font:inherit;
-    font-size:.95rem;
-    color:var(--ink);
-  }
-  .signup input::placeholder{color:#98a0b4}
-  .signup button{
-    flex:0 0 auto;
-    border:0;
-    cursor:pointer;
-    font:inherit;
-    font-size:.95rem;
-    font-weight:600;
-    color:#fff;
-    background:var(--accent);
-    padding:14px 22px;
-    border-radius:11px;
-    transition:background .15s;
-  }
-  .signup button:hover{background:#4a2ee0}
-  .note{
-    margin:14px 0 0;
-    font-size:.8125rem;
-    color:var(--muted);
-  }
+  .trust li{display:flex;align-items:center;gap:7px}
+  .trust svg{width:15px;height:15px;color:var(--blue-600);flex:none}
 
-  /* ---------- pipeline preview (pure CSS, no images) ---------- */
-  .panel{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:20px;
+  /* ---------- hero visual ---------- */
+  .pipeline{
+    background:#fff;border:1px solid var(--line);border-radius:18px;
     padding:22px;
-    box-shadow:0 34px 70px -40px rgba(11,16,32,.42);
+    box-shadow:
+      0 28px 60px -28px rgba(11,27,58,.35),
+      0 0 0 6px rgba(37,99,235,.04);
   }
-  .panel-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:.6875rem;
-    font-weight:700;
-    letter-spacing:.09em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:10px;
+  .pipeline-head{
+    display:flex;align-items:center;gap:12px;
+    padding-bottom:16px;border-bottom:1px solid var(--line);
   }
-  .synced{display:flex;align-items:center;gap:6px;color:#12904a}
-  .synced i{width:7px;height:7px;border-radius:50%;background:#22c55e;display:block}
-  .row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:14px 0;
-    border-bottom:1px dashed var(--line);
-    font-size:.9375rem;
-  }
-  .row:last-child{border-bottom:0;padding-bottom:2px}
-  .row b{font-weight:600}
-  .row small{display:block;color:var(--muted);font-size:.75rem;font-weight:400}
-  .amount{font-variant-numeric:tabular-nums;font-weight:600;font-size:.875rem}
+  .dots{display:flex;gap:5px}
+  .dots i{width:8px;height:8px;border-radius:50%;background:#DCE4F2;display:block}
+  .dots i:first-child{background:#C2D2EA}
+  .pipeline-title{font-size:.8125rem;font-weight:600;color:var(--slate)}
   .pill{
-    font-size:.6875rem;
-    font-weight:700;
-    padding:4px 10px;
-    border-radius:999px;
-    background:rgba(91,61,245,.1);
-    color:var(--accent);
+    margin-left:auto;font-size:.75rem;font-weight:700;color:var(--blue-700);
+    background:var(--blue-50);border:1px solid var(--blue-100);
+    padding:4px 10px;border-radius:999px;
   }
+  .stage{margin-top:18px}
+  .stage-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .stage-row span:first-child{font-size:.875rem;font-weight:600}
+  .stage-meta{font-size:.8125rem;font-weight:500;color:var(--slate)}
+  .track{margin-top:8px;height:8px;border-radius:999px;background:#EDF2FB;overflow:hidden}
+  .fill{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue-500),var(--blue-600))}
+  .fill.f2{background:linear-gradient(90deg,#60A5FA,var(--blue-500))}
+  .fill.f3{background:linear-gradient(90deg,#93C5FD,#60A5FA)}
+  .nudge{
+    margin-top:24px;display:flex;gap:12px;align-items:flex-start;
+    background:var(--blue-50);border:1px solid var(--blue-100);
+    border-radius:12px;padding:14px 16px;
+    font-size:.8125rem;color:var(--slate);line-height:1.5;
+  }
+  .nudge strong{color:var(--navy);font-weight:700}
+  .nudge-icon{
+    flex:none;width:28px;height:28px;border-radius:8px;
+    background:#fff;color:var(--blue-600);display:grid;place-items:center;
+    border:1px solid var(--blue-100);
+  }
+  .nudge-icon svg{width:15px;height:15px}
 
-  /* ---------- how it works ---------- */
-  .how{padding:clamp(56px,8vw,96px) 0 clamp(64px,8vw,96px);border-top:1px solid var(--line)}
-  .how h2{
-    margin:0 0 clamp(32px,5vw,48px);
-    font-size:clamp(1.5rem,3vw,2rem);
-    letter-spacing:-.02em;
-    font-weight:800;
+  /* ---------- sections ---------- */
+  .section{padding:96px 0}
+  .section-tint{background:var(--tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .sec-head{max-width:660px;margin-bottom:56px}
+  .sec-head h2{
+    font-size:clamp(1.75rem,3.4vw,2.5rem);
+    line-height:1.14;letter-spacing:-.03em;font-weight:800;
   }
-  .steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,40px);margin:0;padding:0}
-  .steps li{display:flex;flex-direction:column;gap:12px}
-  .icon{
-    width:40px;height:40px;border-radius:12px;
-    display:grid;place-items:center;
-    color:var(--accent);
-    background:rgba(91,61,245,.1);
+  .sec-head p{margin-top:16px;color:var(--slate);font-size:1.0625rem}
+
+  /* ---------- problem cards ---------- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:32px 28px;
+    box-shadow:0 1px 2px rgba(11,27,58,.04);
   }
-  .icon svg{width:20px;height:20px}
-  .steps h3{margin:0;font-size:1.0625rem;font-weight:700;letter-spacing:-.01em}
-  .steps p{margin:0;color:var(--muted);font-size:.9375rem;line-height:1.6}
+  .card-icon{
+    width:44px;height:44px;border-radius:12px;
+    background:var(--blue-50);border:1px solid var(--blue-100);
+    color:var(--blue-600);display:grid;place-items:center;margin-bottom:20px;
+  }
+  .card-icon svg{width:21px;height:21px}
+  .card h3{font-size:1.0625rem;font-weight:700;letter-spacing:-.01em}
+  .card p{margin-top:8px;color:var(--slate);font-size:.9375rem}
+
+  /* ---------- steps ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  .step{position:relative;padding-top:8px}
+  .step::after{
+    content:"";position:absolute;top:28px;left:56px;right:-32px;height:1px;
+    background:var(--blue-100);
+  }
+  .step:last-child::after{display:none}
+  .step-num{
+    width:40px;height:40px;border-radius:50%;position:relative;z-index:1;
+    background:var(--blue-600);color:#fff;
+    display:grid;place-items:center;font-weight:700;font-size:.9375rem;
+    box-shadow:0 0 0 6px rgba(37,99,235,.10);
+  }
+  .step h3{margin-top:22px;font-size:1.125rem;font-weight:700;letter-spacing:-.015em}
+  .step p{margin-top:8px;color:var(--slate);font-size:.9375rem}
+
+  /* ---------- who ---------- */
+  .who-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center}
+  .who-list{display:grid;gap:16px}
+  .who-item{
+    display:flex;gap:16px;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;
+    box-shadow:0 1px 2px rgba(11,27,58,.04);
+  }
+  .who-check{
+    flex:none;width:24px;height:24px;border-radius:50%;margin-top:2px;
+    background:var(--blue-600);color:#fff;display:grid;place-items:center;
+  }
+  .who-check svg{width:13px;height:13px}
+  .who-item strong{display:block;font-size:.9375rem;font-weight:700}
+  .who-item span{font-size:.875rem;color:var(--slate)}
+
+  /* ---------- closing cta ---------- */
+  .cta-panel{
+    position:relative;overflow:hidden;
+    border-radius:24px;padding:72px 48px;text-align:center;color:#fff;
+    background:linear-gradient(135deg,#0B1B3A 0%,#12306B 58%,#1D4ED8 135%);
+  }
+  .cta-panel::before{
+    content:"";position:absolute;top:-140px;right:-90px;
+    width:360px;height:360px;border-radius:50%;
+    background:radial-gradient(circle,rgba(96,165,250,.55),transparent 70%);
+  }
+  .cta-panel h2{
+    position:relative;
+    font-size:clamp(1.75rem,3.6vw,2.5rem);
+    line-height:1.14;letter-spacing:-.03em;font-weight:800;
+  }
+  .cta-panel p{
+    position:relative;margin:16px auto 0;max-width:32em;
+    color:rgba(255,255,255,.78);font-size:1.0625rem;
+  }
+  .cta-panel .btn{
+    position:relative;margin-top:32px;background:#fff;color:var(--navy);
+    box-shadow:0 12px 30px -10px rgba(0,0,0,.5);
+  }
+  .cta-panel .btn:hover{background:var(--blue-50);transform:translateY(-1px)}
+  .cta-note{position:relative;margin-top:18px;font-size:.8125rem;color:rgba(255,255,255,.6)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:40px 0;background:#fff}
+  .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot-inner p,.foot-inner a{font-size:.875rem;color:var(--slate)}
+  .foot-inner a{text-decoration:none}
+  .foot-inner a:hover{color:var(--blue-600)}
+  .foot-links{display:flex;gap:24px}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:48px}
+    .cards{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr;gap:32px}
+    .step::after{display:none}
+    .who-grid{grid-template-columns:1fr;gap:40px}
+    .nav-links{display:none}
+    .nav-inner .btn{margin-left:auto}
+  }
 
   @media (max-width:640px){
-    .hero-grid{grid-template-columns:1fr}
-    .hero{padding-bottom:56px}
-    .steps{grid-template-columns:1fr;gap:32px}
-    .signup{flex-wrap:wrap;padding:8px}
-    .signup button{flex:1 1 100%;border-radius:11px}
-    .panel{padding:18px}
+    .wrap{padding:0 20px}
+    .nav-inner{height:62px;gap:16px}
+    .hero{padding:64px 0 72px}
+    .section{padding:64px 0}
+    .sec-head{margin-bottom:40px}
+    .pipeline{padding:18px}
+    .cta-panel{padding:48px 24px;border-radius:18px}
+    .btn-lg{padding:15px 24px;font-size:.9375rem}
+    .foot-inner{flex-direction:column;align-items:flex-start}
   }
 </style>
 </head>
 <body>
 
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6" cy="19" r="3"/>
+          <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/>
+          <circle cx="18" cy="5" r="3"/>
+        </svg>
+      </span>
+      DealRail
+    </a>
+    <nav class="nav-links">
+      <a href="#problem">The problem</a>
+      <a href="#how">How it works</a>
+      <a href="#who">Who it's for</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#cta">Get early access</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- hero -->
   <section class="hero">
-    <div class="wrap">
-      <div class="brand">
-        <span class="mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h13"/>
-          </svg>
-        </span>
-        DealRail
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow"><i></i> Built for B2B sales teams</span>
+        <h1>Every deal on the rail, <span class="accent">from first call to closed won.</span></h1>
+        <p class="lede">
+          DealRail sits on top of the CRM you already use and makes one thing true: every open
+          deal has a stage, an owner, and a next step with a date. Your pipeline stops going
+          quiet, and your forecast stops being a guess.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="#cta">
+            Start free trial
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a class="link-arrow" href="#how">
+            See how it works
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+        <ul class="trust">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            14-day free trial
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            No credit card
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            Works with HubSpot &amp; Salesforce
+          </li>
+        </ul>
       </div>
 
-      <div class="hero-grid">
-        <div>
-          <h1>Every deal, on <span>one rail</span>.</h1>
-          <p class="lede">DealRail pulls your deals out of inboxes, docs, and spreadsheets into a single pipeline that keeps itself up to date.</p>
-
-          <form class="signup" action="REPLACE_WITH_ENDPOINT" method="post">
-            <label for="email">Work email</label>
-            <input id="email" type="email" name="email" placeholder="you@company.com" required>
-            <button type="submit">Get early access</button>
-          </form>
-          <p class="note">Free while in beta. No credit card.</p>
+      <div class="pipeline">
+        <div class="pipeline-head">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="pipeline-title">Q3 pipeline</span>
+          <span class="pill">$1.24M</span>
         </div>
 
-        <div class="panel" aria-hidden="true">
-          <div class="panel-head">
-            <span>Live pipeline</span>
-            <span class="synced"><i></i>Synced</span>
-          </div>
-          <div class="row">
-            <span><b>Northwind</b><small>Proposal sent 2h ago</small></span>
-            <span class="amount">$24,000</span>
-          </div>
-          <div class="row">
-            <span><b>Arcadia Labs</b><small>Demo booked Thu</small></span>
-            <span class="amount">$9,500</span>
-          </div>
-          <div class="row">
-            <span><b>Foxtrot</b><small>Awaiting signature</small></span>
-            <span class="pill">Closing</span>
-          </div>
+        <div class="stage">
+          <div class="stage-row"><span>Discovery</span><span class="stage-meta">7 deals · $310k</span></div>
+          <div class="track"><i class="fill" style="width:74%"></i></div>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <section class="how">
-    <div class="wrap">
-      <h2>How it works</h2>
-      <ol class="steps">
-        <li>
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-            </svg>
-          </span>
-          <h3>Connect</h3>
-          <p>Link your inbox and CRM in one click. DealRail reads the threads you already have.</p>
-        </li>
-        <li>
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
-              <path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-            </svg>
-          </span>
-          <h3>Auto-update</h3>
-          <p>Every reply and meeting is matched to a deal and moves it to the right stage.</p>
-        </li>
-        <li>
-          <span class="icon" aria-hidden="true">
+        <div class="stage">
+          <div class="stage-row"><span>Proposal</span><span class="stage-meta">5 deals · $480k</span></div>
+          <div class="track"><i class="fill f2" style="width:58%"></i></div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-row"><span>Negotiation</span><span class="stage-meta">3 deals · $450k</span></div>
+          <div class="track"><i class="fill f3" style="width:41%"></i></div>
+        </div>
+
+        <div class="nudge">
+          <span class="nudge-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
           </span>
-          <h3>Stay ahead</h3>
-          <p>A short daily digest flags the deals that stalled and what to do next.</p>
-        </li>
-      </ol>
+          <span><strong>3 deals have no next step booked.</strong> DealRail queues them for you every morning.</span>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- problem -->
+  <section class="section section-tint" id="problem">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Your pipeline isn't short on deals. It's short on momentum.</h2>
+        <p>
+          Most stalled revenue doesn't come from a lost deal. It comes from a deal that quietly
+          stopped moving while everyone assumed somebody else was on it.
+        </p>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v5l3.5 2"/>
+            </svg>
+          </span>
+          <h3>Deals go quiet</h3>
+          <p>
+            The last activity is three weeks old and nobody notices. There's no signal that a
+            deal stopped moving until the quarter is already over.
+          </p>
+        </article>
+
+        <article class="card">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m22 17-8.5-8.5-5 5L2 7"/>
+              <path d="M16 17h6v-6"/>
+            </svg>
+          </span>
+          <h3>The forecast is a gut call</h3>
+          <p>
+            Stage names mean different things to different reps, so the number you commit to on
+            Friday is a weighted guess dressed up as a spreadsheet.
+          </p>
+        </article>
+
+        <article class="card">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9.5" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </span>
+          <h3>Handoffs drop</h3>
+          <p>
+            An SDR hands off a warm account and the context goes with them. New owner, same deal,
+            and the customer has to repeat themselves.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- how it works -->
+  <section class="section" id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Three steps to a pipeline that moves itself</h2>
+        <p>No migration, no new spreadsheet, no process doc nobody reads.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <h3>Connect your CRM</h3>
+          <p>
+            One-click sync with HubSpot or Salesforce. DealRail reads stages, owners, amounts and
+            last touch — and keeps reading them, so you never re-enter a thing.
+          </p>
+        </div>
+
+        <div class="step">
+          <span class="step-num">2</span>
+          <h3>Every deal gets a rail</h3>
+          <p>
+            Each open deal is placed on a stage rail with one required next step and a date.
+            Anything missing a next step shows up red before it can quietly die.
+          </p>
+        </div>
+
+        <div class="step">
+          <span class="step-num">3</span>
+          <h3>Nudges and a defensible forecast</h3>
+          <p>
+            Reps get a short daily queue of what actually needs moving. You get a forecast built
+            from real stage history — not from how confident everyone sounded in the standup.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- who it's for -->
+  <section class="section section-tint" id="who">
+    <div class="wrap who-grid">
+      <div>
+        <h2 style="font-size:clamp(1.75rem,3.4vw,2.5rem);line-height:1.14;letter-spacing:-.03em;font-weight:800;">
+          Built for the people who own the number
+        </h2>
+        <p style="margin-top:16px;color:var(--slate);font-size:1.0625rem;">
+          DealRail is deliberately narrow. It doesn't do marketing automation, ticketing or
+          billing — it keeps B2B deals from falling off the rail.
+        </p>
+      </div>
+
+      <div class="who-list">
+        <div class="who-item">
+          <span class="who-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <span>
+            <strong>B2B sales teams of 5–50 reps</strong>
+            <span>who live in a CRM nobody fully trusts and lose deals in the gaps between stages.</span>
+          </span>
+        </div>
+
+        <div class="who-item">
+          <span class="who-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <span>
+            <strong>RevOps leads</strong>
+            <span>who rebuild the same forecast spreadsheet every Friday afternoon.</span>
+          </span>
+        </div>
+
+        <div class="who-item">
+          <span class="who-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <span>
+            <strong>Founders still selling</strong>
+            <span>before the first sales hire, when the pipeline only exists in your head.</span>
+          </span>
+        </div>
+
+        <div class="who-item">
+          <span class="who-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <span>
+            <strong>Agencies and consultancies</strong>
+            <span>running 20+ open opportunities at once across a handful of account managers.</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- closing cta -->
+  <section class="section" id="cta">
+    <div class="wrap">
+      <div class="cta-panel">
+        <h2>Put your pipeline back on the rails.</h2>
+        <p>
+          Connect your CRM, import your open deals, and see which ones have gone quiet before
+          the week is out.
+        </p>
+        <a class="btn btn-lg" href="#top">
+          Get early access
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <p class="cta-note">No credit card required · Set up in under 10 minutes</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <p>DealRail — every deal on the rail.</p>
+    <div class="foot-links">
+      <a href="#problem">The problem</a>
+      <a href="#how">How it works</a>
+      <a href="#who">Who it's for</a>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
