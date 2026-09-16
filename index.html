@@ -3,459 +3,1143 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Book a 30-minute intro call</title>
-<meta name="description" content="Pick a time that works for you and book a 30-minute intro call. Choose any open slot in the live calendar below.">
-<meta name="theme-color" content="#3B4FE4">
+<title>DealRail — One rail for pipeline, deal rooms, and forecasting</title>
+<meta name="description" content="DealRail keeps pipeline stages, deal rooms, and forecasts in a single workspace. Your team updates the rail as they work, so the number you report is the number that's actually there.">
 
-<!-- Calendly inline widget -->
+<!-- Calendly widget assets -->
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 
 <style>
   :root{
-    --ink:#0B0D17;
-    --ink-2:#2A3040;
-    --muted:#5F6675;
-    --line:#E4E7F0;
-    --surface:#FFFFFF;
-    --surface-alt:#F5F6FB;
-    --accent:#3B4FE4;
-    --accent-dark:#2A39B8;
-    --accent-soft:#EEF1FE;
+    --blue-700:#1D4ED8;
+    --blue-600:#2563EB;
+    --blue-500:#3B82F6;
+    --blue-100:#DBEAFE;
+    --blue-50:#EFF6FF;
+    --ink:#0B1120;
+    --muted:#5A6478;
+    --line:#E3E8F0;
+    --tint:#F6F8FC;
+    --white:#FFFFFF;
+    --green:#10B981;
+    --amber:#F59E0B;
+    --violet:#7C3AED;
     --radius:16px;
+    --shadow-sm:0 1px 2px rgba(11,17,32,.06);
+    --shadow-md:0 18px 40px -24px rgba(11,17,32,.28), 0 2px 6px rgba(11,17,32,.04);
+    --shadow-lg:0 30px 70px -30px rgba(11,17,32,.40), 0 2px 6px rgba(11,17,32,.05);
   }
 
   *,*::before,*::after{box-sizing:border-box}
 
-  html{scroll-behavior:smooth}
+  html{
+    scroll-behavior:smooth;
+    -webkit-text-size-adjust:100%;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+  }
 
   body{
     margin:0;
-    font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    background:var(--white);
     color:var(--ink);
-    background:var(--surface);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    font-size:1rem;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
 
-  h1,h2,h3{margin:0;line-height:1.15;letter-spacing:-0.02em;font-weight:700}
+  h1,h2,h3{
+    margin:0;
+    color:var(--ink);
+    letter-spacing:-0.022em;
+    line-height:1.15;
+    font-weight:700;
+  }
+
   p{margin:0}
+  ul{margin:0;padding:0;list-style:none}
   a{color:inherit}
-  svg{display:block}
 
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .wrap{
+    width:100%;
+    max-width:1160px;
+    margin:0 auto;
+    padding:0 24px;
+  }
 
-  /* ---------- Header ---------- */
-  .site-header{
-    position:sticky;top:0;z-index:20;
-    background:rgba(255,255,255,.88);
-    backdrop-filter:blur(10px);
+  section{scroll-margin-top:88px}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-family:inherit;
+    font-size:1rem;
+    font-weight:600;
+    line-height:1;
+    padding:15px 24px;
+    border-radius:10px;
+    border:1px solid transparent;
+    text-decoration:none;
+    cursor:pointer;
+    transition:background-color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+    white-space:nowrap;
+  }
+  .btn svg{width:18px;height:18px;flex:none}
+  .btn-sm{font-size:.9375rem;padding:11px 18px;border-radius:9px}
+
+  .btn-primary{
+    background:var(--blue-700);
+    color:#fff;
+    box-shadow:0 1px 2px rgba(11,17,32,.10), 0 10px 26px -12px rgba(29,78,216,.72);
+  }
+  .btn-primary:hover{
+    background:#1a45be;
+    transform:translateY(-1px);
+    box-shadow:0 1px 2px rgba(11,17,32,.10), 0 16px 32px -14px rgba(29,78,216,.85);
+  }
+  .btn-secondary{
+    background:#fff;
+    color:var(--ink);
+    border-color:var(--line);
+    box-shadow:var(--shadow-sm);
+  }
+  .btn-secondary:hover{
+    border-color:#c9d3e2;
+    transform:translateY(-1px);
+  }
+  .btn-ghost-light{
+    background:rgba(255,255,255,.10);
+    color:#fff;
+    border-color:rgba(255,255,255,.28);
+  }
+  .btn-ghost-light:hover{
+    background:rgba(255,255,255,.18);
+    transform:translateY(-1px);
+  }
+
+  /* ---------- Nav ---------- */
+  .nav{
+    position:sticky;
+    top:0;
+    z-index:60;
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
     border-bottom:1px solid var(--line);
   }
-  .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:72px}
-  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;letter-spacing:-0.01em;font-size:.95rem}
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    gap:32px;
+    height:68px;
+  }
+  .brand{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-size:1.125rem;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    text-decoration:none;
+    color:var(--ink);
+  }
   .brand-mark{
-    width:34px;height:34px;border-radius:10px;
-    background:linear-gradient(135deg,var(--accent),#7C8CFF);
-    display:grid;place-items:center;color:#fff;
+    display:grid;
+    place-items:center;
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    background:linear-gradient(140deg,var(--blue-600),var(--blue-700));
+    color:#fff;
+    box-shadow:0 6px 14px -6px rgba(29,78,216,.8);
   }
-  .nav-links{display:flex;align-items:center;gap:24px}
-  .nav-link{font-size:.9rem;font-weight:600;color:var(--muted);text-decoration:none}
-  .nav-link:hover{color:var(--ink)}
-  .nav-cta{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:10px 18px;border-radius:10px;
-    background:var(--accent);color:#fff;text-decoration:none;
-    font-size:.875rem;font-weight:600;
-    box-shadow:0 8px 20px -12px rgba(59,79,228,.9);
+  .brand-mark svg{width:18px;height:18px}
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    margin-left:8px;
+    font-size:.9375rem;
+    font-weight:500;
   }
-  .nav-cta:hover{background:var(--accent-dark)}
+  .nav-links a{
+    text-decoration:none;
+    color:var(--muted);
+    transition:color .16s ease;
+  }
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{margin-left:auto}
 
   /* ---------- Hero ---------- */
   .hero{
-    position:relative;overflow:hidden;
-    padding:96px 0 88px;
+    position:relative;
+    padding:clamp(72px, 9vw, 104px) 0 clamp(56px, 7vw, 88px);
     background:
-      radial-gradient(900px 520px at 88% -12%, rgba(59,79,228,.16), transparent 70%),
-      radial-gradient(720px 420px at -5% 105%, rgba(59,79,228,.08), transparent 70%),
-      #fff;
+      radial-gradient(860px 420px at 84% -12%, rgba(37,99,235,.20), transparent 68%),
+      radial-gradient(620px 320px at 6% 8%, rgba(59,130,246,.12), transparent 70%),
+      linear-gradient(180deg,#F4F8FF 0%,#FFFFFF 82%);
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
   }
-  .hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
-
+  .hero::after{
+    content:"";
+    position:absolute;
+    inset:auto 0 0 0;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(37,99,235,.22),transparent);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:clamp(40px, 5vw, 72px);
+    align-items:center;
+  }
   .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:6px 14px;border-radius:999px;
-    background:var(--accent-soft);color:var(--accent-dark);
-    font-size:.8125rem;font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:.8125rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--blue-700);
+    background:var(--blue-50);
+    border:1px solid var(--blue-100);
+    border-radius:999px;
+    padding:7px 14px;
+    margin-bottom:24px;
   }
-  h1{margin-top:24px;font-size:clamp(2.25rem,5.2vw,3.5rem);font-weight:800;letter-spacing:-0.035em}
-  h1 .accent{color:var(--accent)}
-  .lede{margin-top:20px;max-width:34em;font-size:clamp(1.0625rem,1.6vw,1.1875rem);color:var(--muted)}
-  .hero-actions{display:flex;flex-wrap:wrap;gap:16px;margin-top:32px}
+  .eyebrow-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--blue-600);
+  }
+  .hero h1{
+    font-size:clamp(2.25rem, 4.6vw, 3.5rem);
+    font-weight:800;
+    letter-spacing:-0.032em;
+    line-height:1.06;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--blue-700);
+  }
+  .hero-sub{
+    margin-top:24px;
+    font-size:clamp(1.0625rem, 1.4vw, 1.1875rem);
+    line-height:1.62;
+    color:var(--muted);
+    max-width:34em;
+  }
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-top:36px;
+  }
+  .hero-note{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:20px;
+    font-size:.9375rem;
+    color:var(--muted);
+  }
+  .hero-note svg{width:17px;height:17px;color:var(--blue-600);flex:none}
 
-  .btn{
-    display:inline-flex;align-items:center;gap:10px;
-    padding:14px 24px;border-radius:12px;
-    font-size:.95rem;font-weight:600;text-decoration:none;
-    border:1px solid transparent;
-    transition:transform .15s ease,background .15s ease,box-shadow .15s ease,border-color .15s ease;
-  }
-  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 14px 28px -16px rgba(59,79,228,.95)}
-  .btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px)}
-  .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink)}
-  .btn-ghost:hover{border-color:#C9CFE4}
-
-  .hero-note{display:flex;align-items:center;gap:8px;margin-top:20px;font-size:.875rem;color:var(--muted)}
-  .hero-note .tick{color:var(--accent)}
-
-  /* ---------- Hero visual ---------- */
-  .hero-visual{position:relative}
-  .cal-card{
-    background:#fff;border:1px solid var(--line);border-radius:20px;
-    padding:24px;box-shadow:0 34px 70px -34px rgba(11,13,23,.32);
-  }
-  .cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-  .cal-month{font-size:.95rem;font-weight:700}
-  .cal-nav{display:flex;gap:8px;color:#98A0B5}
-
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
-  .cal-grid .dow{
-    padding-bottom:6px;font-size:.6875rem;font-weight:700;color:#98A0B5;
-    text-transform:uppercase;letter-spacing:.06em;
-  }
-  .cal-grid .day{
-    padding:8px 0;border-radius:8px;
-    font-size:.8125rem;color:var(--ink-2);
-    font-variant-numeric:tabular-nums;
-  }
-  .cal-grid .day.off{color:#C3C9D8}
-  .cal-grid .day.on{
-    background:var(--accent);color:#fff;font-weight:700;
-    box-shadow:0 10px 18px -10px rgba(59,79,228,1);
-  }
-
-  .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
-  .slot{
-    flex:1;text-align:center;white-space:nowrap;
-    padding:8px 4px;border-radius:9px;
+  /* ---------- Deal panel ---------- */
+  .panel{
+    background:#fff;
     border:1px solid var(--line);
-    font-size:.8125rem;font-weight:600;color:var(--ink-2);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-lg);
+    overflow:hidden;
   }
-  .slot.sel{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark)}
-
+  .panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:18px 22px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#FBFCFE,#F6F8FC);
+  }
+  .panel-title{
+    font-size:.9375rem;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .badge-live{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:.75rem;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:#0F7A56;
+    background:#E7F8F1;
+    border:1px solid #BFEBDC;
+    border-radius:999px;
+    padding:5px 11px;
+  }
+  .badge-live .pulse{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 0 0 rgba(16,185,129,.55);
+    animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(16,185,129,.55)}
+    70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}
+    100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+  }
+  .deal-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:15px 22px;
+    border-bottom:1px solid var(--line);
+  }
+  .deal-row:last-child{border-bottom:0}
+  .deal-name{
+    font-size:.9375rem;
+    font-weight:600;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:9px;
+  }
+  .deal-type{
+    font-weight:500;
+    font-size:.8125rem;
+    color:var(--muted);
+  }
   .chip{
-    position:absolute;bottom:-18px;left:-18px;
-    display:flex;align-items:center;gap:10px;
-    padding:12px 16px;border-radius:14px;
-    background:#fff;border:1px solid var(--line);
-    box-shadow:0 22px 44px -26px rgba(11,13,23,.45);
-    font-size:.875rem;font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:.8125rem;
+    font-weight:600;
+    color:#33415C;
+    background:var(--tint);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:5px 12px;
+    white-space:nowrap;
   }
-  .chip .dot{width:26px;height:26px;border-radius:50%;background:#E7F5EF;color:#12775A;display:grid;place-items:center}
-
-  /* ---------- Stats strip ---------- */
-  .strip{background:var(--surface-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:32px 0}
-  .strip-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
-  .stat + .stat{border-left:1px solid var(--line);padding-left:32px}
-  .stat .v{font-size:1.5rem;font-weight:800;letter-spacing:-0.02em}
-  .stat .l{margin-top:4px;font-size:.875rem;color:var(--muted)}
-
-  /* ---------- Sections ---------- */
-  .section{padding:96px 0}
-  .section-head{max-width:660px;margin-bottom:48px}
-  .section-head h2{font-size:clamp(1.75rem,3.2vw,2.25rem)}
-  .section-head p{margin-top:16px;font-size:1.0625rem;color:var(--muted)}
-
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px}
-  .card .icon{
-    width:44px;height:44px;border-radius:12px;margin-bottom:24px;
-    background:var(--accent-soft);color:var(--accent);
-    display:grid;place-items:center;
+  .chip i{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--blue-500);
+    flex:none;
   }
-  .card h3{font-size:1.0625rem;margin-bottom:8px}
-  .card p{font-size:.9375rem;color:var(--muted)}
+  .chip i.amber{background:var(--amber)}
+  .chip i.violet{background:var(--violet)}
+  .chip i.slate{background:#94A3B8}
+  .panel-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:16px 22px;
+    background:var(--tint);
+    border-top:1px solid var(--line);
+    font-size:.875rem;
+  }
+  .panel-foot .label{color:var(--muted)}
+  .panel-foot .value{
+    font-weight:700;
+    color:var(--blue-700);
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+  }
+  .panel-foot .value svg{width:15px;height:15px}
 
-  /* ---------- Booking ---------- */
-  .booking{
-    padding:96px 0;
+  /* ---------- Value points ---------- */
+  .values{
+    padding:clamp(48px, 6vw, 72px) 0;
+    background:var(--white);
+  }
+  .values-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  .value{
+    display:flex;
+    gap:16px;
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:linear-gradient(180deg,#FFFFFF,#FCFDFF);
+    box-shadow:var(--shadow-sm);
+  }
+  .value-icon{
+    display:grid;
+    place-items:center;
+    width:42px;height:42px;
+    flex:none;
+    border-radius:11px;
+    background:var(--blue-50);
+    border:1px solid var(--blue-100);
+    color:var(--blue-700);
+  }
+  .value-icon svg{width:20px;height:20px}
+  .value h3{
+    font-size:1rem;
+    font-weight:700;
+    letter-spacing:-0.012em;
+    margin-bottom:4px;
+  }
+  .value p{
+    font-size:.9375rem;
+    color:var(--muted);
+    line-height:1.55;
+  }
+
+  /* ---------- Section headers ---------- */
+  .section-head{
+    max-width:44em;
+    margin-bottom:clamp(36px, 4vw, 56px);
+  }
+  .section-head h2{
+    font-size:clamp(1.75rem, 3.4vw, 2.5rem);
+    font-weight:700;
+    letter-spacing:-0.028em;
+    line-height:1.14;
+  }
+  .section-head p{
+    margin-top:18px;
+    font-size:1.0625rem;
+    color:var(--muted);
+    line-height:1.62;
+  }
+
+  /* ---------- Features ---------- */
+  .features{
+    padding:clamp(56px, 7vw, 96px) 0;
+    background:var(--white);
+    border-top:1px solid var(--line);
+  }
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  .feature{
+    position:relative;
+    padding:32px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:#fff;
+    box-shadow:var(--shadow-sm);
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .feature:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-md);
+    border-color:#D2DCEB;
+  }
+  .feature-icon{
+    display:grid;
+    place-items:center;
+    width:46px;height:46px;
+    border-radius:12px;
+    background:linear-gradient(140deg,var(--blue-600),var(--blue-700));
+    color:#fff;
+    margin-bottom:22px;
+    box-shadow:0 10px 22px -12px rgba(29,78,216,.9);
+  }
+  .feature-icon svg{width:22px;height:22px}
+  .feature h3{
+    font-size:1.1875rem;
+    font-weight:700;
+    letter-spacing:-0.018em;
+    margin-bottom:10px;
+  }
+  .feature p{
+    font-size:.9688rem;
+    color:var(--muted);
+    line-height:1.62;
+  }
+
+  /* ---------- Scheduling / Calendly ---------- */
+  .schedule{
+    padding:clamp(56px, 7vw, 96px) 0;
     background:
-      radial-gradient(760px 420px at 50% 0%, rgba(59,79,228,.12), transparent 72%),
-      var(--surface-alt);
+      radial-gradient(700px 320px at 92% 0%, rgba(37,99,235,.10), transparent 70%),
+      var(--tint);
     border-top:1px solid var(--line);
     border-bottom:1px solid var(--line);
   }
-  .booking-head{max-width:660px;margin:0 auto 40px;text-align:center}
-  .booking-head .eyebrow{margin-bottom:20px}
-  .booking-head h2{font-size:clamp(1.75rem,3.2vw,2.25rem)}
-  .booking-head p{margin-top:16px;font-size:1.0625rem;color:var(--muted)}
+  .schedule-grid{
+    display:grid;
+    grid-template-columns:.85fr 1.15fr;
+    gap:clamp(32px, 4.5vw, 56px);
+    align-items:start;
+  }
+  .schedule h2{
+    font-size:clamp(1.75rem, 3.4vw, 2.375rem);
+    font-weight:700;
+    letter-spacing:-0.028em;
+    line-height:1.14;
+  }
+  .schedule-sub{
+    margin-top:18px;
+    font-size:1.0625rem;
+    color:var(--muted);
+    line-height:1.62;
+  }
+  .schedule-list{
+    margin-top:32px;
+    display:grid;
+    gap:16px;
+  }
+  .schedule-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    font-size:.9688rem;
+    color:#2C3648;
+    line-height:1.55;
+  }
+  .check{
+    display:grid;
+    place-items:center;
+    width:22px;height:22px;
+    flex:none;
+    margin-top:1px;
+    border-radius:50%;
+    background:var(--blue-50);
+    border:1px solid var(--blue-100);
+    color:var(--blue-700);
+  }
+  .check svg{width:12px;height:12px;stroke-width:3}
+  .schedule-meta{
+    margin-top:28px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:.875rem;
+    color:var(--muted);
+  }
+  .schedule-meta svg{width:16px;height:16px;color:var(--blue-600);flex:none}
 
-  .booking-card{
-    background:#fff;border:1px solid var(--line);
-    border-radius:24px;padding:8px;
-    box-shadow:0 44px 90px -56px rgba(11,13,23,.5);
+  .calendly-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-md);
     overflow:hidden;
+  }
+  .calendly-card-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:16px 22px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#FBFCFE,#F6F8FC);
+  }
+  .calendly-card-head .title{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:.9375rem;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .calendly-card-head .title svg{width:17px;height:17px;color:var(--blue-700)}
+  .calendly-card-head .tz{
+    font-size:.8125rem;
+    color:var(--muted);
+    font-weight:500;
   }
   .calendly-inline-widget{
-    min-width:320px;
+    width:100%;
+    min-width:280px;
     height:700px;
-    border-radius:18px;
-    overflow:hidden;
     background:#fff;
   }
+  .calendly-fallback{
+    padding:16px 22px;
+    border-top:1px solid var(--line);
+    background:var(--tint);
+    font-size:.875rem;
+    color:var(--muted);
+    text-align:center;
+  }
+  .calendly-fallback a{
+    color:var(--blue-700);
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:1px solid rgba(29,78,216,.35);
+  }
+  .calendly-fallback a:hover{border-bottom-color:var(--blue-700)}
 
-  .booking-note{margin-top:24px;text-align:center;font-size:.875rem;color:var(--muted)}
-  .booking-note a{color:var(--accent-dark);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(59,79,228,.35)}
+  /* ---------- Final CTA ---------- */
+  .cta{
+    padding:clamp(56px, 7vw, 88px) 0;
+    background:
+      radial-gradient(760px 380px at 82% 100%, rgba(59,130,246,.35), transparent 68%),
+      linear-gradient(135deg,#0B1120 0%,#111C38 55%,#122A56 100%);
+    color:#fff;
+  }
+  .cta-inner{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:clamp(32px, 5vw, 64px);
+    align-items:center;
+  }
+  .cta h2{
+    color:#fff;
+    font-size:clamp(1.875rem, 3.6vw, 2.625rem);
+    font-weight:800;
+    letter-spacing:-0.03em;
+    line-height:1.12;
+  }
+  .cta p{
+    margin-top:18px;
+    font-size:1.0625rem;
+    color:rgba(255,255,255,.72);
+    line-height:1.62;
+    max-width:34em;
+  }
+  .cta-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    justify-content:flex-end;
+  }
+  .cta-points{
+    margin-top:28px;
+    display:grid;
+    gap:12px;
+  }
+  .cta-points li{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-size:.9375rem;
+    color:rgba(255,255,255,.82);
+  }
+  .cta-points .check{
+    background:rgba(255,255,255,.12);
+    border-color:rgba(255,255,255,.22);
+    color:#fff;
+  }
 
   /* ---------- Footer ---------- */
-  .site-footer{background:var(--ink);color:#AEB4C6;padding:40px 0;font-size:.875rem}
-  .site-footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  .site-footer a{color:#fff;text-decoration:none;font-weight:600}
+  .footer{
+    background:var(--white);
+    padding:clamp(48px, 6vw, 72px) 0 32px;
+    border-top:1px solid var(--line);
+  }
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.6fr 1fr 1fr;
+    gap:clamp(32px, 5vw, 64px);
+  }
+  .footer-brand{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-size:1.0625rem;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    margin-bottom:16px;
+  }
+  .footer-desc{
+    font-size:.9375rem;
+    color:var(--muted);
+    line-height:1.62;
+    max-width:32em;
+  }
+  .footer-col h4{
+    font-size:.8125rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#8894A8;
+    margin:0 0 16px;
+  }
+  .footer-col ul{display:grid;gap:12px}
+  .footer-col a{
+    font-size:.9375rem;
+    color:#33415C;
+    text-decoration:none;
+    transition:color .16s ease;
+  }
+  .footer-col a:hover{color:var(--blue-700)}
+  .footer-bottom{
+    margin-top:clamp(40px, 5vw, 56px);
+    padding-top:24px;
+    border-top:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    font-size:.875rem;
+    color:var(--muted);
+  }
+
+  /* ---------- Sticky floating CTA ---------- */
+  .sticky-cta{
+    position:fixed;
+    left:16px;
+    right:16px;
+    bottom:16px;
+    z-index:70;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:16px 22px;
+    border-radius:12px;
+    background:var(--blue-700);
+    color:#fff;
+    font-weight:600;
+    font-size:1rem;
+    text-decoration:none;
+    box-shadow:0 16px 34px -12px rgba(29,78,216,.85);
+  }
+  .sticky-cta svg{width:18px;height:18px}
 
   /* ---------- Responsive ---------- */
-  @media (max-width:960px){
-    .hero-inner{grid-template-columns:1fr;gap:48px}
-    .hero-visual{max-width:520px}
-    .cards{grid-template-columns:1fr;gap:16px}
-    .strip-inner{grid-template-columns:1fr;gap:24px}
-    .stat + .stat{border-left:none;padding-left:0;padding-top:24px;border-top:1px solid var(--line)}
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr}
+    .hero-sub{max-width:none}
+    .values-grid{grid-template-columns:1fr}
+    .feature-grid{grid-template-columns:1fr}
+    .schedule-grid{grid-template-columns:1fr}
+    .cta-inner{grid-template-columns:1fr}
+    .cta-actions{justify-content:flex-start}
+    .footer-grid{grid-template-columns:1fr 1fr}
+    .footer-brand-col{grid-column:1 / -1}
   }
 
   @media (max-width:640px){
     .wrap{padding:0 20px}
-    .nav{height:64px}
-    .nav-links{gap:16px}
-    .nav-link{display:none}
-    .hero{padding:64px 0 56px}
-    .section,.booking{padding:64px 0}
-    .hero-actions .btn{flex:1 1 100%;justify-content:center}
-    .chip{left:8px;bottom:-16px;padding:10px 14px;font-size:.8125rem}
-    .booking-card{padding:0;border-radius:20px}
-    .calendly-inline-widget{height:1120px;border-radius:20px}
+    .nav-inner{height:62px;gap:16px}
+    .nav-links{display:none}
+    .nav-cta .btn{padding:10px 15px;font-size:.875rem}
+    .hero{padding-top:clamp(72px, 9vw, 104px);padding-bottom:56px}
+    .hero-actions{flex-direction:column;align-items:stretch}
+    .hero-actions .btn{width:100%}
+    .values, .features, .schedule, .cta{padding-top:56px;padding-bottom:56px}
+    .feature{padding:24px}
+    .value{padding:20px}
+    .calendly-inline-widget{height:760px}
+    .cta-actions{flex-direction:column;align-items:stretch}
+    .cta-actions .btn{width:100%}
+    .footer-grid{grid-template-columns:1fr}
+    .footer-bottom{flex-direction:column;align-items:flex-start}
+    .sticky-cta{display:flex}
+    body{padding-bottom:88px}
   }
 </style>
 </head>
-<body>
+<body id="top">
 
-<header class="site-header">
-  <div class="wrap nav">
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
     <a class="brand" href="#top">
-      <span class="brand-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-          <path d="M16 2v4"></path>
-          <path d="M8 2v4"></path>
-          <path d="M3 10h18"></path>
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 3v18M19 3v18"/><path d="M5 9h14M5 15h14"/>
         </svg>
       </span>
-      Intro calls
+      DealRail
     </a>
-    <nav class="nav-links">
-      <a class="nav-link" href="#expect">What to expect</a>
-      <a class="nav-cta" href="#book">
-        Pick a time
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 12h14"></path>
-          <path d="M12 5l7 7-7 7"></path>
+
+    <nav class="nav-links" aria-label="Main">
+      <a href="#features">Product</a>
+      <a href="#why">Why DealRail</a>
+    </nav>
+
+    <div class="nav-cta">
+      <a class="btn btn-primary btn-sm" href="#book">
+        Book a call
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
         </svg>
       </a>
-    </nav>
+    </div>
   </div>
 </header>
 
-<main id="top">
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="wrap hero-inner">
-      <div>
-        <span class="eyebrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 6v6l4 2"></path>
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="eyebrow-dot"></span>Deal desk for revenue teams</span>
+
+      <h1>Every deal, on <em>one rail</em> — from first call to closed won.</h1>
+
+      <p class="hero-sub">
+        DealRail keeps pipeline stages, deal rooms, and forecasts in a single workspace.
+        Your team updates the rail as they work, so the number you report is the number
+        that's actually there.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#book">
+          Book a 20-minute call
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
           </svg>
-          30 minutes, one conversation
-        </span>
-
-        <h1>Book a time that<br><span class="accent">actually works</span> for you.</h1>
-
-        <p class="lede">
-          Pick any open slot in the live calendar below. You'll get a confirmation with the
-          meeting link straight away — no back-and-forth emails, no waiting on a reply.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#book">
-            See open times
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M12 5l7 7-7 7"></path>
-            </svg>
-          </a>
-          <a class="btn btn-ghost" href="#expect">What we'll cover</a>
-        </div>
-
-        <p class="hero-note">
-          <span class="tick">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M20 6L9 17l-5-5"></path>
-            </svg>
-          </span>
-          Times are shown in your own timezone. Camera optional.
-        </p>
+        </a>
+        <a class="btn btn-secondary" href="#features">See how it works</a>
       </div>
 
-      <div class="hero-visual" aria-hidden="true">
-        <div class="cal-card">
-          <div class="cal-top">
-            <span class="cal-month">June 2025</span>
-            <span class="cal-nav">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
-            </span>
-          </div>
-
-          <div class="cal-grid">
-            <span class="dow">M</span><span class="dow">T</span><span class="dow">W</span>
-            <span class="dow">T</span><span class="dow">F</span><span class="dow">S</span><span class="dow">S</span>
-
-            <span class="day off">26</span><span class="day off">27</span><span class="day off">28</span>
-            <span class="day off">29</span><span class="day off">30</span><span class="day off">31</span><span class="day">1</span>
-
-            <span class="day">2</span><span class="day">3</span><span class="day">4</span>
-            <span class="day">5</span><span class="day">6</span><span class="day">7</span><span class="day off">8</span>
-
-            <span class="day">9</span><span class="day">10</span><span class="day">11</span>
-            <span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day off">15</span>
-
-            <span class="day">16</span><span class="day on">17</span><span class="day">18</span>
-            <span class="day">19</span><span class="day">20</span><span class="day">21</span><span class="day off">22</span>
-
-            <span class="day">23</span><span class="day">24</span><span class="day">25</span>
-            <span class="day">26</span><span class="day">27</span><span class="day">28</span><span class="day off">29</span>
-          </div>
-
-          <div class="slots">
-            <span class="slot">9:00</span>
-            <span class="slot sel">10:30</span>
-            <span class="slot">1:00</span>
-            <span class="slot">3:30</span>
-          </div>
-        </div>
-
-        <div class="chip">
-          <span class="dot">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
-          </span>
-          Confirmed · Tue, 10:30 AM
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats strip -->
-  <section class="strip">
-    <div class="wrap strip-inner">
-      <div class="stat">
-        <div class="v">30 min</div>
-        <div class="l">One focused call, start to finish</div>
-      </div>
-      <div class="stat">
-        <div class="v">1:1</div>
-        <div class="l">A conversation, not a sales deck</div>
-      </div>
-      <div class="stat">
-        <div class="v">Same day</div>
-        <div class="l">Confirmation and calendar invite land instantly</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- What to expect -->
-  <section class="section" id="expect">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>What to expect from the call</h2>
-        <p>Thirty minutes is enough to get a clear picture. Here's how we'll spend it.</p>
-      </div>
-
-      <div class="cards">
-        <article class="card">
-          <span class="icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M23 7l-7 5 7 5V7z"></path>
-              <rect x="1" y="5" width="15" height="14" rx="2"></rect>
-            </svg>
-          </span>
-          <h3>A real walkthrough</h3>
-          <p>We'll look at what you're working on together, share the screen, and talk through where things stand right now.</p>
-        </article>
-
-        <article class="card">
-          <span class="icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
-            </svg>
-          </span>
-          <h3>Straight answers</h3>
-          <p>Pricing, timelines, scope, fit — ask anything. If we're not the right fit, we'll say so on the call.</p>
-        </article>
-
-        <article class="card">
-          <span class="icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 6v6l4 2"></path>
-            </svg>
-          </span>
-          <h3>Clear next steps</h3>
-          <p>You'll leave knowing exactly what happens next — and you'll get a short written recap the same day.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Booking -->
-  <section class="booking" id="book">
-    <div class="wrap">
-      <div class="booking-head">
-        <span class="eyebrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-            <path d="M16 2v4"></path>
-            <path d="M8 2v4"></path>
-            <path d="M3 10h18"></path>
-          </svg>
-          Live availability
-        </span>
-        <h2>Pick a time that works for you</h2>
-        <p>
-          Choose any open slot in the calendar below. It updates in real time, so whatever you
-          see is genuinely free — and you'll get a confirmation the moment you book.
-        </p>
-      </div>
-
-      <div class="booking-card">
-        <div
-          class="calendly-inline-widget"
-          data-url="https://calendly.com/seyimba1234/30min"></div>
-      </div>
-
-      <p class="booking-note">
-        Times are converted to your local timezone automatically.
-        Looking for a different call length? <a href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">See every available slot →</a>
+      <p class="hero-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Pick a time below — no slides, no obligation.
       </p>
     </div>
-  </section>
 
-</main>
+    <div class="hero-visual">
+      <div class="panel" role="img" aria-label="Q3 pipeline panel showing four deals advancing through stages">
+        <div class="panel-head">
+          <span class="panel-title">Q3 pipeline</span>
+          <span class="badge-live"><span class="pulse"></span>Live</span>
+        </div>
 
-<footer class="site-footer">
+        <ul>
+          <li class="deal-row">
+            <span class="deal-name">Northwind <span class="deal-type">— Expansion</span></span>
+            <span class="chip"><i></i>Contract sent</span>
+          </li>
+          <li class="deal-row">
+            <span class="deal-name">Arcadia Labs <span class="deal-type">— New logo</span></span>
+            <span class="chip"><i class="amber"></i>Security review</span>
+          </li>
+          <li class="deal-row">
+            <span class="deal-name">Meridian <span class="deal-type">— Platform</span></span>
+            <span class="chip"><i class="violet"></i>Pricing shared</span>
+          </li>
+          <li class="deal-row">
+            <span class="deal-name">Fairview <span class="deal-type">— Renewal</span></span>
+            <span class="chip"><i class="slate"></i>Discovery</span>
+          </li>
+        </ul>
+
+        <div class="panel-foot">
+          <span class="label">Deals advancing this week</span>
+          <span class="value">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+            </svg>
+            12 stages moved
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ VALUE POINTS ============ -->
+<section class="values" id="why">
   <div class="wrap">
-    <span>Intro calls · 30 minutes</span>
-    <a href="#book">Jump to the calendar</a>
+    <ul class="values-grid">
+
+      <li class="value">
+        <span class="value-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </span>
+        <div>
+          <h3>Built for the whole team</h3>
+          <p>Sales, solutions, and finance work on the same rail.</p>
+        </div>
+      </li>
+
+      <li class="value">
+        <span class="value-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="7" rx="2"/>
+            <rect x="3" y="14" width="18" height="7" rx="2"/>
+            <line x1="7" y1="6.5" x2="7.01" y2="6.5"/>
+            <line x1="7" y1="17.5" x2="7.01" y2="17.5"/>
+          </svg>
+        </span>
+        <div>
+          <h3>Fits your existing stack</h3>
+          <p>Syncs with the CRM and tools you already run.</p>
+        </div>
+      </li>
+
+      <li class="value">
+        <span class="value-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
+            <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+          </svg>
+        </span>
+        <div>
+          <h3>Real people on support</h3>
+          <p>Questions answered by the team that builds it.</p>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="features" id="features">
+  <div class="wrap">
+
+    <div class="section-head">
+      <h2>Everything your revenue team needs to keep deals moving</h2>
+      <p>
+        Stop stitching together spreadsheets, shared drives, and stale CRM fields.
+        DealRail gives you one place where the pipeline is always current.
+      </p>
+    </div>
+
+    <ul class="feature-grid">
+
+      <li class="feature">
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </span>
+        <h3>Pipeline you can trust</h3>
+        <p>
+          Every stage, owner, and next step sits in one view — updated as the team works,
+          not in a Friday scramble.
+        </p>
+      </li>
+
+      <li class="feature">
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+        </span>
+        <h3>Deal rooms that stay current</h3>
+        <p>
+          Share scope, pricing, and files behind a single link, so buyers stop asking
+          which version is the latest one.
+        </p>
+      </li>
+
+      <li class="feature">
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+            <polyline points="17 6 23 6 23 12"/>
+          </svg>
+        </span>
+        <h3>Forecast without the guesswork</h3>
+        <p>
+          Roll-ups reflect what's actually happening in the pipeline, so the number you
+          report is one you can defend.
+        </p>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SCHEDULING — INLINE CALENDLY ============ -->
+<section class="schedule" id="book">
+  <div class="wrap schedule-grid">
+
+    <div>
+      <h2>Book a 20-minute call</h2>
+      <p class="schedule-sub">
+        Choose a slot that works for you and we'll walk through your current pipeline,
+        answer questions, and show you where DealRail fits.
+      </p>
+
+      <ul class="schedule-list">
+        <li>
+          <span class="check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          20 minutes, on the clock. No padded demos.
+        </li>
+        <li>
+          <span class="check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          Bring your real pipeline. We'll map it live.
+        </li>
+        <li>
+          <span class="check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          No obligation. You'll get a clear yes or no.
+        </li>
+      </ul>
+
+      <p class="schedule-meta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>
+        </svg>
+        Times shown in your local timezone.
+      </p>
+    </div>
+
+    <div class="calendly-card">
+      <div class="calendly-card-head">
+        <span class="title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Pick a time
+        </span>
+        <span class="tz">20 min</span>
+      </div>
+
+      <!-- Inline Calendly widget (renders in place, not a popup) -->
+      <div
+        class="calendly-inline-widget"
+        data-url="https://calendly.com/seyimba1234"
+        style="min-width:280px;height:700px;"></div>
+
+      <div class="calendly-fallback">
+        Calendar not loading?
+        <a href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">Open Calendly in a new tab</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="cta" id="get-started">
+  <div class="wrap cta-inner">
+
+    <div>
+      <h2>Ready to get your deals moving</h2>
+      <p>
+        Pick a slot and bring your live pipeline. In 20 minutes you'll know whether
+        DealRail fits your team — and exactly what it would change.
+      </p>
+
+      <ul class="cta-points">
+        <li>
+          <span class="check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          One rail from first call to closed won.
+        </li>
+        <li>
+          <span class="check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </span>
+          A forecast you can defend to the board.
+        </li>
+      </ul>
+    </div>
+
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">
+        Book a 20-minute call
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      <a class="btn btn-ghost-light" href="#book">See available times</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+
+      <div class="footer-brand-col">
+        <div class="footer-brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 3v18M19 3v18"/><path d="M5 9h14M5 15h14"/>
+            </svg>
+          </span>
+          DealRail
+        </div>
+        <p class="footer-desc">
+          One rail for pipeline, deal rooms, and forecasting — built for revenue teams
+          that hate stale spreadsheets.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Pipeline</a></li>
+          <li><a href="#features">Deal rooms</a></li>
+          <li><a href="#features">Forecasting</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Talk to us</h4>
+        <ul>
+          <li><a href="#book">Book a 20-minute call</a></li>
+          <li><a href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">Open Calendly</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2024 DealRail. All rights reserved.</span>
+    </div>
   </div>
 </footer>
+
+<!-- ============ STICKY FLOATING CTA (mobile) ============ -->
+<a class="sticky-cta" href="#book">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  Book a call
+</a>
+
+<!-- Calendly widget script: renders .calendly-inline-widget in place -->
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 
 </body>
 </html>
