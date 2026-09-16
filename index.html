@@ -1,767 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Northbeam - Ship internal tools in an afternoon</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a 30-minute intro call</title>
+<meta name="description" content="Pick a time that works for you and book a 30-minute intro call. Choose any open slot in the live calendar below.">
+<meta name="theme-color" content="#3B4FE4">
+
+<!-- Calendly inline widget -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
 <style>
-  :root {
-    --blue-700: #1d4ed8;
-    --blue-600: #2563eb;
-    --blue-500: #3b82f6;
-    --blue-50:  #eff6ff;
-    --blue-100: #dbeafe;
-    --ink:      #0b1220;
-    --body:     #47506a;
-    --muted:    #6b7385;
-    --line:     #e3e8f0;
-    --surface:  #f6f8fc;
-    --white:    #ffffff;
-
-    --radius-sm: 8px;
-    --radius:    14px;
-    --radius-lg: 22px;
-
-    --shadow-sm: 0 1px 2px rgba(11, 18, 32, 0.06);
-    --shadow-md: 0 10px 30px -12px rgba(29, 78, 216, 0.28);
-
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  :root{
+    --ink:#0B0D17;
+    --ink-2:#2A3040;
+    --muted:#5F6675;
+    --line:#E4E7F0;
+    --surface:#FFFFFF;
+    --surface-alt:#F5F6FB;
+    --accent:#3B4FE4;
+    --accent-dark:#2A39B8;
+    --accent-soft:#EEF1FE;
+    --radius:16px;
   }
 
-  * { box-sizing: border-box; }
+  *,*::before,*::after{box-sizing:border-box}
 
-  html { scroll-behavior: smooth; }
+  html{scroll-behavior:smooth}
 
-  body {
-    margin: 0;
-    font-family: var(--font);
-    color: var(--body);
-    background: var(--white);
-    font-size: 1rem;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
+  body{
+    margin:0;
+    font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--surface);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
   }
 
-  h1, h2, h3 {
-    color: var(--ink);
-    line-height: 1.15;
-    margin: 0;
-    letter-spacing: -0.02em;
+  h1,h2,h3{margin:0;line-height:1.15;letter-spacing:-0.02em;font-weight:700}
+  p{margin:0}
+  a{color:inherit}
+  svg{display:block}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* ---------- Header ---------- */
+  .site-header{
+    position:sticky;top:0;z-index:20;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
   }
-
-  p { margin: 0; }
-
-  a { color: inherit; text-decoration: none; }
-
-  .wrap {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 24px;
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:72px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;letter-spacing:-0.01em;font-size:.95rem}
+  .brand-mark{
+    width:34px;height:34px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),#7C8CFF);
+    display:grid;place-items:center;color:#fff;
   }
-
-  /* ---------- Nav ---------- */
-
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(255, 255, 255, 0.86);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line);
+  .nav-links{display:flex;align-items:center;gap:24px}
+  .nav-link{font-size:.9rem;font-weight:600;color:var(--muted);text-decoration:none}
+  .nav-link:hover{color:var(--ink)}
+  .nav-cta{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 18px;border-radius:10px;
+    background:var(--accent);color:#fff;text-decoration:none;
+    font-size:.875rem;font-weight:600;
+    box-shadow:0 8px 20px -12px rgba(59,79,228,.9);
   }
-
-  .nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    height: 72px;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    color: var(--ink);
-    font-size: 1.0625rem;
-    letter-spacing: -0.01em;
-  }
-
-  .brand-mark {
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    background: linear-gradient(140deg, var(--blue-500), var(--blue-700));
-    display: grid;
-    place-items: center;
-    color: #fff;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    font-size: 0.9375rem;
-    font-weight: 500;
-  }
-
-  .nav-links a { color: var(--muted); transition: color 0.15s ease; }
-  .nav-links a:hover { color: var(--blue-700); }
-
-  /* ---------- Buttons ---------- */
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: inherit;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    padding: 12px 22px;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-    white-space: nowrap;
-  }
-
-  .btn-primary {
-    background: var(--blue-600);
-    color: #fff;
-    box-shadow: var(--shadow-md);
-  }
-
-  .btn-primary:hover {
-    background: var(--blue-700);
-    transform: translateY(-1px);
-  }
-
-  .btn-ghost {
-    background: var(--white);
-    color: var(--ink);
-    border-color: var(--line);
-  }
-
-  .btn-ghost:hover {
-    border-color: var(--blue-500);
-    color: var(--blue-700);
-  }
+  .nav-cta:hover{background:var(--accent-dark)}
 
   /* ---------- Hero ---------- */
-  /* Spacing fix: the hero previously sat flush against the top edge.
-     Padding now follows the same 8px scale used across the rest of the page. */
-
-  .hero {
-    position: relative;
-    overflow: hidden;
+  .hero{
+    position:relative;overflow:hidden;
+    padding:96px 0 88px;
     background:
-      radial-gradient(900px 420px at 82% -8%, rgba(59, 130, 246, 0.16), transparent 62%),
-      linear-gradient(180deg, var(--blue-50) 0%, var(--white) 78%);
-    border-bottom: 1px solid var(--line);
-    padding: clamp(72px, 9vw, 104px) 24px clamp(64px, 8vw, 96px);
+      radial-gradient(900px 520px at 88% -12%, rgba(59,79,228,.16), transparent 70%),
+      radial-gradient(720px 420px at -5% 105%, rgba(59,79,228,.08), transparent 70%),
+      #fff;
+  }
+  .hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-soft);color:var(--accent-dark);
+    font-size:.8125rem;font-weight:600;
+  }
+  h1{margin-top:24px;font-size:clamp(2.25rem,5.2vw,3.5rem);font-weight:800;letter-spacing:-0.035em}
+  h1 .accent{color:var(--accent)}
+  .lede{margin-top:20px;max-width:34em;font-size:clamp(1.0625rem,1.6vw,1.1875rem);color:var(--muted)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:16px;margin-top:32px}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 24px;border-radius:12px;
+    font-size:.95rem;font-weight:600;text-decoration:none;
+    border:1px solid transparent;
+    transition:transform .15s ease,background .15s ease,box-shadow .15s ease,border-color .15s ease;
+  }
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 14px 28px -16px rgba(59,79,228,.95)}
+  .btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px)}
+  .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:#C9CFE4}
+
+  .hero-note{display:flex;align-items:center;gap:8px;margin-top:20px;font-size:.875rem;color:var(--muted)}
+  .hero-note .tick{color:var(--accent)}
+
+  /* ---------- Hero visual ---------- */
+  .hero-visual{position:relative}
+  .cal-card{
+    background:#fff;border:1px solid var(--line);border-radius:20px;
+    padding:24px;box-shadow:0 34px 70px -34px rgba(11,13,23,.32);
+  }
+  .cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .cal-month{font-size:.95rem;font-weight:700}
+  .cal-nav{display:flex;gap:8px;color:#98A0B5}
+
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+  .cal-grid .dow{
+    padding-bottom:6px;font-size:.6875rem;font-weight:700;color:#98A0B5;
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .cal-grid .day{
+    padding:8px 0;border-radius:8px;
+    font-size:.8125rem;color:var(--ink-2);
+    font-variant-numeric:tabular-nums;
+  }
+  .cal-grid .day.off{color:#C3C9D8}
+  .cal-grid .day.on{
+    background:var(--accent);color:#fff;font-weight:700;
+    box-shadow:0 10px 18px -10px rgba(59,79,228,1);
   }
 
-  .hero-grid {
-    max-width: 1120px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    align-items: center;
-    gap: 64px;
+  .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+  .slot{
+    flex:1;text-align:center;white-space:nowrap;
+    padding:8px 4px;border-radius:9px;
+    border:1px solid var(--line);
+    font-size:.8125rem;font-weight:600;color:var(--ink-2);
   }
+  .slot.sel{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark)}
 
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(37, 99, 235, 0.09);
-    color: var(--blue-700);
-    border: 1px solid var(--blue-100);
-    border-radius: 999px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    padding: 7px 14px;
-    margin-bottom: 24px;
+  .chip{
+    position:absolute;bottom:-18px;left:-18px;
+    display:flex;align-items:center;gap:10px;
+    padding:12px 16px;border-radius:14px;
+    background:#fff;border:1px solid var(--line);
+    box-shadow:0 22px 44px -26px rgba(11,13,23,.45);
+    font-size:.875rem;font-weight:600;
   }
+  .chip .dot{width:26px;height:26px;border-radius:50%;background:#E7F5EF;color:#12775A;display:grid;place-items:center}
 
-  .hero h1 {
-    font-size: clamp(2.125rem, 5vw, 3.5rem);
-    font-weight: 800;
-    margin-bottom: 24px;
-    max-width: 15ch;
-  }
-
-  .hero h1 .accent { color: var(--blue-600); }
-
-  .hero-lede {
-    font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
-    color: var(--body);
-    max-width: 52ch;
-    margin-bottom: 32px;
-  }
-
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .hero-checks {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 24px;
-    font-size: 0.9375rem;
-    color: var(--muted);
-  }
-
-  .hero-checks li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    list-style: none;
-  }
-
-  .hero-checks ul { padding: 0; margin: 0; }
-
-  .check-icon { color: var(--blue-600); flex: 0 0 auto; }
-
-  /* Hero visual panel */
-
-  .hero-panel {
-    background: var(--white);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 24px 60px -30px rgba(29, 78, 216, 0.35);
-    padding: 24px;
-  }
-
-  .panel-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 16px;
-  }
-
-  .panel-title {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: 0.01em;
-  }
-
-  .dots { display: flex; gap: 6px; }
-  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue-100); }
-  .dot.live { background: var(--blue-500); }
-
-  .bar-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 0.8125rem;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .bar-label { width: 78px; flex: 0 0 auto; font-weight: 600; color: var(--ink); }
-
-  .bar-track {
-    flex: 1;
-    height: 10px;
-    border-radius: 999px;
-    background: var(--surface);
-    overflow: hidden;
-  }
-
-  .bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--blue-500), var(--blue-700));
-  }
-
-  .panel-foot {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.8125rem;
-    color: var(--muted);
-  }
+  /* ---------- Stats strip ---------- */
+  .strip{background:var(--surface-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:32px 0}
+  .strip-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  .stat + .stat{border-left:1px solid var(--line);padding-left:32px}
+  .stat .v{font-size:1.5rem;font-weight:800;letter-spacing:-0.02em}
+  .stat .l{margin-top:4px;font-size:.875rem;color:var(--muted)}
 
   /* ---------- Sections ---------- */
+  .section{padding:96px 0}
+  .section-head{max-width:660px;margin-bottom:48px}
+  .section-head h2{font-size:clamp(1.75rem,3.2vw,2.25rem)}
+  .section-head p{margin-top:16px;font-size:1.0625rem;color:var(--muted)}
 
-  .section { padding: clamp(64px, 8vw, 96px) 24px; }
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px}
+  .card .icon{
+    width:44px;height:44px;border-radius:12px;margin-bottom:24px;
+    background:var(--accent-soft);color:var(--accent);
+    display:grid;place-items:center;
+  }
+  .card h3{font-size:1.0625rem;margin-bottom:8px}
+  .card p{font-size:.9375rem;color:var(--muted)}
 
-  .section.tinted {
-    background: var(--surface);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+  /* ---------- Booking ---------- */
+  .booking{
+    padding:96px 0;
+    background:
+      radial-gradient(760px 420px at 50% 0%, rgba(59,79,228,.12), transparent 72%),
+      var(--surface-alt);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .booking-head{max-width:660px;margin:0 auto 40px;text-align:center}
+  .booking-head .eyebrow{margin-bottom:20px}
+  .booking-head h2{font-size:clamp(1.75rem,3.2vw,2.25rem)}
+  .booking-head p{margin-top:16px;font-size:1.0625rem;color:var(--muted)}
+
+  .booking-card{
+    background:#fff;border:1px solid var(--line);
+    border-radius:24px;padding:8px;
+    box-shadow:0 44px 90px -56px rgba(11,13,23,.5);
+    overflow:hidden;
+  }
+  .calendly-inline-widget{
+    min-width:320px;
+    height:700px;
+    border-radius:18px;
+    overflow:hidden;
+    background:#fff;
   }
 
-  .section-head {
-    max-width: 640px;
-    margin: 0 auto 48px;
-    text-align: center;
-  }
-
-  .section-head h2 {
-    font-size: clamp(1.625rem, 3vw, 2.25rem);
-    font-weight: 800;
-    margin-bottom: 16px;
-  }
-
-  .section-head p { color: var(--muted); font-size: 1.0625rem; }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    max-width: 1120px;
-    margin: 0 auto;
-  }
-
-  .card {
-    background: var(--white);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 32px 24px;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .card-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-    display: grid;
-    place-items: center;
-    background: var(--blue-50);
-    color: var(--blue-600);
-    border: 1px solid var(--blue-100);
-    margin-bottom: 24px;
-  }
-
-  .card h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: 8px; }
-  .card p { font-size: 0.9375rem; color: var(--muted); }
-
-  /* ---------- CTA / form ---------- */
-
-  .cta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: center;
-    max-width: 1120px;
-    margin: 0 auto;
-  }
-
-  .cta-copy h2 {
-    font-size: clamp(1.625rem, 3vw, 2.25rem);
-    font-weight: 800;
-    margin-bottom: 16px;
-  }
-
-  .cta-copy p { color: var(--muted); margin-bottom: 24px; max-width: 48ch; }
-
-  .cta-copy .btn { margin-top: 4px; }
-
-  .form-card {
-    background: var(--white);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    box-shadow: 0 20px 50px -28px rgba(29, 78, 216, 0.32);
-  }
-
-  .form-card h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 8px; }
-  .form-card .hint { font-size: 0.875rem; color: var(--muted); margin-bottom: 24px; }
-
-  .field { margin-bottom: 16px; }
-
-  .field label {
-    display: block;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
-
-  .field input {
-    width: 100%;
-    font-family: inherit;
-    font-size: 0.9375rem;
-    color: var(--ink);
-    padding: 12px 14px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: var(--white);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .field input::placeholder { color: #9aa2b4; }
-
-  .field input:focus {
-    outline: none;
-    border-color: var(--blue-500);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
-  }
-
-  .form-card .btn { width: 100%; margin-top: 8px; }
-
-  .form-note {
-    font-size: 0.8125rem;
-    color: var(--muted);
-    margin-top: 16px;
-    text-align: center;
-  }
-
-  .form-success {
-    display: none;
-    text-align: center;
-    padding: 16px 0 8px;
-  }
-
-  .form-success.visible { display: block; }
-
-  .success-badge {
-    width: 52px;
-    height: 52px;
-    margin: 0 auto 16px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: var(--blue-50);
-    color: var(--blue-600);
-    border: 1px solid var(--blue-100);
-  }
-
-  .form-success h3 { margin-bottom: 8px; }
-  .form-success p { font-size: 0.9375rem; color: var(--muted); }
+  .booking-note{margin-top:24px;text-align:center;font-size:.875rem;color:var(--muted)}
+  .booking-note a{color:var(--accent-dark);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(59,79,228,.35)}
 
   /* ---------- Footer ---------- */
-
-  .footer {
-    background: var(--ink);
-    color: #96a0b8;
-    padding: 48px 24px;
-    font-size: 0.875rem;
-  }
-
-  .footer-inner {
-    max-width: 1120px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .footer .brand { color: #fff; }
-
-  .footer-links { display: flex; flex-wrap: wrap; gap: 24px; }
-  .footer-links a { transition: color 0.15s ease; }
-  .footer-links a:hover { color: #fff; }
+  .site-footer{background:var(--ink);color:#AEB4C6;padding:40px 0;font-size:.875rem}
+  .site-footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .site-footer a{color:#fff;text-decoration:none;font-weight:600}
 
   /* ---------- Responsive ---------- */
-
-  @media (max-width: 900px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
-    .hero h1 { max-width: 20ch; }
-    .cards { grid-template-columns: 1fr; max-width: 560px; }
-    .cta-grid { grid-template-columns: 1fr; gap: 40px; }
+  @media (max-width:960px){
+    .hero-inner{grid-template-columns:1fr;gap:48px}
+    .hero-visual{max-width:520px}
+    .cards{grid-template-columns:1fr;gap:16px}
+    .strip-inner{grid-template-columns:1fr;gap:24px}
+    .stat + .stat{border-left:none;padding-left:0;padding-top:24px;border-top:1px solid var(--line)}
   }
 
-  @media (max-width: 640px) {
-    .wrap { padding: 0 20px; }
-    .nav-links { display: none; }
-    .nav-inner { height: 64px; }
-
-    /* Hero keeps its breathing room on small screens, at a tighter scale. */
-    .hero {
-      padding: 56px 20px 56px;
-    }
-
-    .hero-lede { font-size: 1rem; }
-    .hero-actions { gap: 10px; }
-    .hero-actions .btn { width: 100%; }
-
-    .hero-panel { padding: 20px; }
-
-    .section { padding: 64px 20px; }
-    .section-head { margin-bottom: 32px; }
-    .card { padding: 24px 20px; }
-    .form-card { padding: 24px 20px; }
-    .footer { padding: 40px 20px; }
+  @media (max-width:640px){
+    .wrap{padding:0 20px}
+    .nav{height:64px}
+    .nav-links{gap:16px}
+    .nav-link{display:none}
+    .hero{padding:64px 0 56px}
+    .section,.booking{padding:64px 0}
+    .hero-actions .btn{flex:1 1 100%;justify-content:center}
+    .chip{left:8px;bottom:-16px;padding:10px 14px;font-size:.8125rem}
+    .booking-card{padding:0;border-radius:20px}
+    .calendly-inline-widget{height:1120px;border-radius:20px}
   }
 </style>
 </head>
 <body>
 
-<header class="nav">
-  <div class="wrap nav-inner">
+<header class="site-header">
+  <div class="wrap nav">
     <a class="brand" href="#top">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+      <span class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+          <path d="M16 2v4"></path>
+          <path d="M8 2v4"></path>
+          <path d="M3 10h18"></path>
         </svg>
       </span>
-      Northbeam
+      Intro calls
     </a>
     <nav class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
-      <a href="#waitlist">Waitlist</a>
+      <a class="nav-link" href="#expect">What to expect</a>
+      <a class="nav-cta" href="#book">
+        Pick a time
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14"></path>
+          <path d="M12 5l7 7-7 7"></path>
+        </svg>
+      </a>
     </nav>
-    <a class="btn btn-primary" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">Book a call</a>
   </div>
 </header>
 
-<!-- Hero -->
-<section class="hero" id="top">
-  <div class="hero-grid">
-    <div>
-      <span class="eyebrow">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 2 15 9l7 .6-5.3 4.6L18.3 21 12 17.3 5.7 21l1.6-6.8L2 9.6 9 9z" />
-        </svg>
-        Private beta now open
-      </span>
+<main id="top">
 
-      <h1>Ship internal tools in an <span class="accent">afternoon</span>, not a quarter</h1>
-
-      <p class="hero-lede">
-        Northbeam connects to your database and turns a plain description into a
-        working admin panel, with permissions, audit logs and hosting handled for you.
-      </p>
-
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#waitlist">
-          Join the waitlist
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14" />
-            <path d="m12 5 7 7-7 7" />
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
           </svg>
-        </a>
-        <a class="btn btn-ghost" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="18" rx="2" />
-            <path d="M16 2v4M8 2v4M3 10h18" />
-          </svg>
-          Book a call
-        </a>
-      </div>
-
-      <ul class="hero-checks">
-        <li>
-          <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20 6 9 17l-5-5" />
-          </svg>
-          No SQL required
-        </li>
-        <li>
-          <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20 6 9 17l-5-5" />
-          </svg>
-          SOC 2 ready
-        </li>
-        <li>
-          <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20 6 9 17l-5-5" />
-          </svg>
-          Deploy in one click
-        </li>
-      </ul>
-    </div>
-
-    <aside class="hero-panel" aria-label="Product preview">
-      <div class="panel-head">
-        <span class="panel-title">Orders dashboard</span>
-        <span class="dots" aria-hidden="true">
-          <span class="dot live"></span><span class="dot"></span><span class="dot"></span>
+          30 minutes, one conversation
         </span>
+
+        <h1>Book a time that<br><span class="accent">actually works</span> for you.</h1>
+
+        <p class="lede">
+          Pick any open slot in the live calendar below. You'll get a confirmation with the
+          meeting link straight away — no back-and-forth emails, no waiting on a reply.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#book">
+            See open times
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="M12 5l7 7-7 7"></path>
+            </svg>
+          </a>
+          <a class="btn btn-ghost" href="#expect">What we'll cover</a>
+        </div>
+
+        <p class="hero-note">
+          <span class="tick">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+          </span>
+          Times are shown in your own timezone. Camera optional.
+        </p>
       </div>
 
-      <div class="bar-row">
-        <span class="bar-label">Build</span>
-        <span class="bar-track"><span class="bar-fill" style="width: 100%"></span></span>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="cal-card">
+          <div class="cal-top">
+            <span class="cal-month">June 2025</span>
+            <span class="cal-nav">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+            </span>
+          </div>
+
+          <div class="cal-grid">
+            <span class="dow">M</span><span class="dow">T</span><span class="dow">W</span>
+            <span class="dow">T</span><span class="dow">F</span><span class="dow">S</span><span class="dow">S</span>
+
+            <span class="day off">26</span><span class="day off">27</span><span class="day off">28</span>
+            <span class="day off">29</span><span class="day off">30</span><span class="day off">31</span><span class="day">1</span>
+
+            <span class="day">2</span><span class="day">3</span><span class="day">4</span>
+            <span class="day">5</span><span class="day">6</span><span class="day">7</span><span class="day off">8</span>
+
+            <span class="day">9</span><span class="day">10</span><span class="day">11</span>
+            <span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day off">15</span>
+
+            <span class="day">16</span><span class="day on">17</span><span class="day">18</span>
+            <span class="day">19</span><span class="day">20</span><span class="day">21</span><span class="day off">22</span>
+
+            <span class="day">23</span><span class="day">24</span><span class="day">25</span>
+            <span class="day">26</span><span class="day">27</span><span class="day">28</span><span class="day off">29</span>
+          </div>
+
+          <div class="slots">
+            <span class="slot">9:00</span>
+            <span class="slot sel">10:30</span>
+            <span class="slot">1:00</span>
+            <span class="slot">3:30</span>
+          </div>
+        </div>
+
+        <div class="chip">
+          <span class="dot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+          </span>
+          Confirmed · Tue, 10:30 AM
+        </div>
       </div>
-      <div class="bar-row">
-        <span class="bar-label">Review</span>
-        <span class="bar-track"><span class="bar-fill" style="width: 82%"></span></span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Ship</span>
-        <span class="bar-track"><span class="bar-fill" style="width: 64%"></span></span>
-      </div>
-
-      <div class="panel-foot">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-        Permissions applied to every table by default
-      </div>
-    </aside>
-  </div>
-</section>
-
-<!-- Features -->
-<section class="section" id="features">
-  <div class="section-head">
-    <h2>Everything the ops team keeps asking for</h2>
-    <p>Generated panels that behave like something your engineers would actually have written.</p>
-  </div>
-
-  <div class="cards">
-    <article class="card">
-      <span class="card-icon" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m13 2-9 12h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-      </span>
-      <h3>Instant scaffolding</h3>
-      <p>Point Northbeam at a schema and get list views, filters and detail pages in under a minute.</p>
-    </article>
-
-    <article class="card">
-      <span class="card-icon" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-      </span>
-      <h3>Roles and audit logs</h3>
-      <p>Row-level permissions and a full activity trail, so support access is never a mystery.</p>
-    </article>
-
-    <article class="card">
-      <span class="card-icon" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 3v18h18" />
-          <path d="M7 15l4-5 3 3 4-6" />
-        </svg>
-      </span>
-      <h3>Usage you can see</h3>
-      <p>Track which internal tools are actually used before you decide to invest more in them.</p>
-    </article>
-  </div>
-</section>
-
-<!-- CTA + waitlist -->
-<section class="section tinted" id="waitlist">
-  <div class="cta-grid">
-    <div class="cta-copy" id="how">
-      <h2>Join the private beta</h2>
-      <p>
-        We are onboarding a small group of teams each week. Leave your details and
-        we will send an invite, or book a 20 minute call if you would rather talk it through first.
-      </p>
-      <a class="btn btn-primary" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="4" width="18" height="18" rx="2" />
-          <path d="M16 2v4M8 2v4M3 10h18" />
-        </svg>
-        Book a call
-      </a>
     </div>
+  </section>
 
-    <div class="form-card">
-      <form id="waitlist-form" novalidate>
-        <h3>Request an invite</h3>
-        <p class="hint">Takes about 15 seconds.</p>
+  <!-- Stats strip -->
+  <section class="strip">
+    <div class="wrap strip-inner">
+      <div class="stat">
+        <div class="v">30 min</div>
+        <div class="l">One focused call, start to finish</div>
+      </div>
+      <div class="stat">
+        <div class="v">1:1</div>
+        <div class="l">A conversation, not a sales deck</div>
+      </div>
+      <div class="stat">
+        <div class="v">Same day</div>
+        <div class="l">Confirmation and calendar invite land instantly</div>
+      </div>
+    </div>
+  </section>
 
-        <div class="field">
-          <label for="name">Full name</label>
-          <input id="name" name="name" type="text" placeholder="Ada Lovelace" autocomplete="name" required />
-        </div>
+  <!-- What to expect -->
+  <section class="section" id="expect">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What to expect from the call</h2>
+        <p>Thirty minutes is enough to get a clear picture. Here's how we'll spend it.</p>
+      </div>
 
-        <div class="field">
-          <label for="email">Work email</label>
-          <input id="email" name="email" type="email" placeholder="ada@company.com" autocomplete="email" required />
-        </div>
+      <div class="cards">
+        <article class="card">
+          <span class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M23 7l-7 5 7 5V7z"></path>
+              <rect x="1" y="5" width="15" height="14" rx="2"></rect>
+            </svg>
+          </span>
+          <h3>A real walkthrough</h3>
+          <p>We'll look at what you're working on together, share the screen, and talk through where things stand right now.</p>
+        </article>
 
-        <div class="field">
-          <label for="company">Company</label>
-          <input id="company" name="company" type="text" placeholder="Company name" autocomplete="organization" />
-        </div>
+        <article class="card">
+          <span class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+            </svg>
+          </span>
+          <h3>Straight answers</h3>
+          <p>Pricing, timelines, scope, fit — ask anything. If we're not the right fit, we'll say so on the call.</p>
+        </article>
 
-        <button class="btn btn-primary" type="submit">Join the waitlist</button>
-        <p class="form-note">No spam. One email when your invite is ready.</p>
-      </form>
+        <article class="card">
+          <span class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
+          </span>
+          <h3>Clear next steps</h3>
+          <p>You'll leave knowing exactly what happens next — and you'll get a short written recap the same day.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-      <div class="form-success" id="form-success" role="status" aria-live="polite">
-        <span class="success-badge" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 6 9 17l-5-5" />
+  <!-- Booking -->
+  <section class="booking" id="book">
+    <div class="wrap">
+      <div class="booking-head">
+        <span class="eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+            <path d="M16 2v4"></path>
+            <path d="M8 2v4"></path>
+            <path d="M3 10h18"></path>
           </svg>
+          Live availability
         </span>
-        <h3>You are on the list</h3>
-        <p>We will email you as soon as your invite is ready.</p>
+        <h2>Pick a time that works for you</h2>
+        <p>
+          Choose any open slot in the calendar below. It updates in real time, so whatever you
+          see is genuinely free — and you'll get a confirmation the moment you book.
+        </p>
       </div>
-    </div>
-  </div>
-</section>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <a class="brand" href="#top">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-      </span>
-      Northbeam
-    </a>
-    <nav class="footer-links">
-      <a href="#features">Features</a>
-      <a href="#waitlist">Waitlist</a>
-      <a href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">Book a call</a>
-    </nav>
-    <span>© 2025 Northbeam</span>
+      <div class="booking-card">
+        <div
+          class="calendly-inline-widget"
+          data-url="https://calendly.com/seyimba1234/30min"></div>
+      </div>
+
+      <p class="booking-note">
+        Times are converted to your local timezone automatically.
+        Looking for a different call length? <a href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">See every available slot →</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Intro calls · 30 minutes</span>
+    <a href="#book">Jump to the calendar</a>
   </div>
 </footer>
-
-<script>
-  (function () {
-    var form = document.getElementById('waitlist-form');
-    var success = document.getElementById('form-success');
-    if (!form) return;
-
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-      var nameField = document.getElementById('name');
-      var emailField = document.getElementById('email');
-      if (nameField && !nameField.value.trim()) { nameField.focus(); return; }
-      if (emailField && !emailField.value.trim()) { emailField.focus(); return; }
-
-      var data = Object.fromEntries(new FormData(form));
-
-      if (window.STARTUPVERSE_SUBMIT_URL) {
-        try {
-          await fetch(window.STARTUPVERSE_SUBMIT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          });
-        } catch (err) {
-          /* Backend unavailable or offline: still confirm the request on screen. */
-        }
-      }
-
-      form.style.display = 'none';
-      success.classList.add('visible');
-    });
-  })();
-</script>
 
 </body>
 </html>
