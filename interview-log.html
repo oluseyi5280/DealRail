@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interview Log — customer discovery, one record at a time</title>
+<style>
+  :root{
+    --ink:#0c0e1a;
+    --body:#41465e;
+    --muted:#737a92;
+    --line:#e3e5f0;
+    --tint:#f5f6fc;
+    --accent:#4a3aff;
+    --accent-dark:#3728d6;
+    --accent-soft:#edecff;
+    --warm:#ff7a45;
+    --danger:#d92c3c;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+
+  html{-webkit-text-size-adjust:100%}
+
+  body{
+    margin:0;
+    background:#fff;
+    color:var(--body);
+    font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    width:100%;
+    max-width:1160px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  svg{display:block}
+
+  /* ---------- top bar ---------- */
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:30;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+
+  .topbar-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    height:68px;
+  }
+
+  .brand{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:var(--ink);
+    font-weight:700;
+    letter-spacing:-.01em;
+    font-size:1rem;
+  }
+
+  .brand-mark{
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    background:linear-gradient(150deg,#4a3aff 0%,#2b1fb8 100%);
+    color:#fff;
+    display:grid;
+    place-items:center;
+    flex:0 0 auto;
+  }
+
+  .brand-mark svg{width:17px;height:17px}
+
+  /* ---------- buttons ---------- */
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    border-radius:10px;
+    padding:12px 20px;
+    font:inherit;
+    font-size:.94rem;
+    font-weight:600;
+    line-height:1;
+    text-decoration:none;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease;
+  }
+
+  .btn svg{width:17px;height:17px}
+
+  .btn-primary{
+    background:var(--accent);
+    color:#fff;
+    box-shadow:0 12px 26px -14px rgba(74,58,255,.85);
+  }
+
+  .btn-primary:hover{background:var(--accent-dark)}
+
+  .btn-ghost{
+    background:#fff;
+    border-color:var(--line);
+    color:var(--ink);
+  }
+
+  .btn-ghost:hover{border-color:#c8cbe0;background:var(--tint)}
+
+  .btn-white{
+    background:#fff;
+    color:var(--accent-dark);
+    box-shadow:0 14px 30px -18px rgba(6,4,60,.9);
+  }
+
+  .btn-white:hover{background:#f2f1ff}
+
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+  .btn-sm{padding:9px 14px;font-size:.88rem}
+
+  /* ---------- hero ---------- */
+
+  .hero{
+    position:relative;
+    overflow:hidden;
+    padding:88px 0 72px;
+    background:
+      radial-gradient(720px 440px at 6% -25%, #e9e8ff 0%, rgba(233,232,255,0) 70%),
+      radial-gradient(540px 380px at 98% -5%, #fff0e8 0%, rgba(255,240,232,0) 68%),
+      #fff;
+  }
+
+  .hero .wrap{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:56px;
+    align-items:center;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--accent-soft);
+    color:#3324c4;
+    padding:7px 14px;
+    border-radius:100px;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin:0;
+  }
+
+  .eyebrow svg{width:14px;height:14px}
+
+  h1{
+    font-size:clamp(2.1rem,4.6vw,3.35rem);
+    line-height:1.07;
+    letter-spacing:-.032em;
+    font-weight:800;
+    color:var(--ink);
+    margin:22px 0 0;
+  }
+
+  h1 .accent{color:var(--accent)}
+
+  .lede{
+    font-size:clamp(1rem,1.5vw,1.12rem);
+    line-height:1.65;
+    margin:22px 0 0;
+    max-width:33em;
+  }
+
+  .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:28px 0 0;
+    padding:0;
+    list-style:none;
+  }
+
+  .chips li{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:.83rem;
+    font-weight:600;
+    color:var(--body);
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:7px 13px;
+  }
+
+  .chips svg{width:14px;height:14px;color:var(--accent)}
+
+  .hero-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 36px 70px -46px rgba(12,14,26,.5);
+  }
+
+  .hero-card h2{
+    font-size:.74rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:700;
+    margin:0 0 22px;
+  }
+
+  .steps{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .steps li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    font-size:.94rem;
+    line-height:1.5;
+  }
+
+  .step-num{
+    flex:0 0 auto;
+    width:24px;
+    height:24px;
+    border-radius:7px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-size:.72rem;
+    font-weight:800;
+    display:grid;
+    place-items:center;
+    margin-top:1px;
+  }
+
+  .steps b{color:var(--ink);font-weight:650}
+
+  /* ---------- workspace ---------- */
+
+  .workspace{
+    background:var(--tint);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:64px 0 88px;
+  }
+
+  .grid-main{
+    display:grid;
+    grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
+    gap:32px;
+    align-items:start;
+  }
+
+  .panel{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:32px;
+    box-shadow:0 30px 60px -52px rgba(12,14,26,.75);
+  }
+
+  .side{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+  }
+
+  .panel-head{
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    padding-bottom:24px;
+    margin-bottom:28px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .panel-icon{
+    flex:0 0 auto;
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    display:grid;
+    place-items:center;
+  }
+
+  .panel-icon svg{width:20px;height:20px}
+
+  .panel-title{
+    font-size:1.32rem;
+    font-weight:750;
+    font-weight:700;
+    letter-spacing:-.015em;
+    color:var(--ink);
+    margin:0 0 4px;
+    line-height:1.25;
+  }
+
+  .panel-sub{
+    font-size:.9rem;
+    color:var(--muted);
+    margin:0;
+    line-height:1.55;
+  }
+
+  /* ---------- form ---------- */
+
+  fieldset{
+    border:0;
+    margin:0 0 32px;
+    padding:0;
+    min-width:0;
+  }
+
+  .group-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:.78rem;
+    font-weight:700;
+    letter-spacing:.11em;
+    text-transform:uppercase;
+    color:var(--ink);
+    padding:0;
+    margin-bottom:20px;
+    width:100%;
+  }
+
+  .group-title::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  .row{
+    display:grid;
+    gap:0 16px;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .row.three{grid-template-columns:1fr 1fr 1fr}
+
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:22px;
+    min-width:0;
+  }
+
+  label{
+    font-size:.74rem;
+    font-weight:700;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .req{color:var(--warm);font-weight:700}
+
+  input,select,textarea{
+    font:inherit;
+    width:100%;
+    color:var(--ink);
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:11px;
+    padding:12px 14px;
+    transition:border-color .15s ease,box-shadow .15s ease,background-color .15s ease;
+  }
+
+  textarea{
+    min-height:112px;
+    resize:vertical;
+    line-height:1.55;
+  }
+
+  input::placeholder,textarea::placeholder{color:#a3a8be}
+
+  input:focus,select:focus,textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px var(--accent-soft);
+  }
+
+  input:user-invalid,select:user-invalid,textarea:user-invalid{
+    border-color:var(--danger);
+    background:#fffafa;
+  }
+
+  select{
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737a92' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 12px center;
+    background-size:16px;
+    padding-right:38px;
+  }
+
+  .hint{
+    font-size:.82rem;
+    line-height:1.5;
+    color:var(--muted);
+    margin:0;
+  }
+
+  .affix{position:relative}
+
+  .affix .prefix{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--muted);
+    font-weight:700;
+    pointer-events:none;
+  }
+
+  .affix input{padding-left:30px}
+
+  .quote-field textarea{
+    border-left:3px solid var(--accent);
+    font-size:1.02rem;
+    line-height:1.6;
+  }
+
+  .form-actions{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:16px;
+    margin-top:8px;
+    padding-top:24px;
+    border-top:1px solid var(--line);
+  }
+
+  .form-actions .hint{flex:1 1 220px}
+
+  /* ---------- success ---------- */
+
+  .success{padding:4px 0}
+
+  .success-badge{
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    display:grid;
+    place-items:center;
+    margin-bottom:20px;
+  }
+
+  .success-badge svg{width:26px;height:26px}
+
+  .success h3{
+    font-size:1.6rem;
+    font-weight:750;
+    font-weight:700;
+    letter-spacing:-.02em;
+    color:var(--ink);
+    margin:0 0 10px;
+    line-height:1.2;
+  }
+
+  .success p{
+    margin:0 0 24px;
+    max-width:38em;
+    font-size:.96rem;
+  }
+
+  .receipt{
+    margin:0 0 28px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+
+  .receipt-row{
+    display:grid;
+    grid-template-columns:150px minmax(0,1fr);
+    gap:16px;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    background:#fff;
+  }
+
+  .receipt-row:last-child{border-bottom:0}
+
+  .receipt-row dt{
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--muted);
+    padding-top:3px;
+  }
+
+  .receipt-row dd{
+    margin:0;
+    font-size:.94rem;
+    color:var(--ink);
+    word-break:break-word;
+  }
+
+  .receipt-row.quote-row dd{
+    color:var(--ink);
+    font-size:1rem;
+    line-height:1.55;
+    border-left:3px solid var(--accent);
+    padding-left:14px;
+  }
+
+  .success-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+
+  /* ---------- side cards ---------- */
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:24px;
+  }
+
+  .card h3{
+    font-size:1rem;
+    font-weight:700;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    margin:0 0 16px;
+  }
+
+  .checks{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+  }
+
+  .checks li{
+    display:flex;
+    gap:11px;
+    align-items:flex-start;
+    font-size:.89rem;
+    line-height:1.5;
+  }
+
+  .checks svg{
+    width:17px;
+    height:17px;
+    flex:0 0 auto;
+    margin-top:2px;
+    color:var(--accent);
+  }
+
+  .book-card{
+    background:linear-gradient(155deg,#4a3aff 0%,#2a1cae 100%);
+    border:0;
+    color:#fff;
+    padding:26px;
+    border-radius:16px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .book-card::after{
+    content:"";
+    position:absolute;
+    width:230px;
+    height:230px;
+    right:-90px;
+    top:-110px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 70%);
+    pointer-events:none;
+  }
+
+  .book-card h3{
+    color:#fff;
+    font-size:1.15rem;
+    margin:0 0 10px;
+    position:relative;
+  }
+
+  .book-card p{
+    margin:0 0 20px;
+    font-size:.89rem;
+    line-height:1.55;
+    color:rgba(255,255,255,.82);
+    position:relative;
+  }
+
+  .book-card .btn{position:relative}
+
+  .book-meta{
+    display:block;
+    margin-top:12px;
+    font-size:.78rem;
+    letter-spacing:.02em;
+    color:rgba(255,255,255,.7);
+    position:relative;
+  }
+
+  .log-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+  }
+
+  .log-head h3{margin:0}
+
+  .log-count{
+    font-size:.75rem;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-radius:100px;
+    padding:4px 10px;
+    white-space:nowrap;
+  }
+
+  .log-empty{
+    margin:0;
+    font-size:.86rem;
+    color:var(--muted);
+    line-height:1.55;
+    border:1px dashed var(--line);
+    border-radius:12px;
+    padding:18px;
+    text-align:center;
+  }
+
+  .log-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-height:340px;
+    overflow-y:auto;
+  }
+
+  .log-item{
+    background:var(--tint);
+    border:1px solid var(--line);
+    border-radius:11px;
+    padding:12px 14px;
+  }
+
+  .log-agency{
+    display:block;
+    font-size:.91rem;
+    font-weight:700;
+    color:var(--ink);
+    line-height:1.35;
+  }
+
+  .log-meta{
+    display:block;
+    font-size:.78rem;
+    color:var(--muted);
+    line-height:1.45;
+    margin-top:3px;
+  }
+
+  /* ---------- footer ---------- */
+
+  .footer{
+    padding:36px 0 44px;
+    background:#fff;
+  }
+
+  .footer .wrap{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    font-size:.83rem;
+    color:var(--muted);
+  }
+
+  .footer p{margin:0}
+
+  .footer a{
+    color:var(--accent);
+    font-weight:600;
+    text-decoration:none;
+  }
+
+  .footer a:hover{text-decoration:underline}
+
+  /* ---------- responsive ---------- */
+
+  @media (min-width:961px){
+    .side{position:sticky;top:92px}
+  }
+
+  @media (max-width:960px){
+    .hero{padding:64px 0 56px}
+    .hero .wrap{grid-template-columns:1fr;gap:40px}
+    .grid-main{grid-template-columns:1fr;gap:28px}
+    .hero-card{padding:24px}
+  }
+
+  @media (max-width:640px){
+    .wrap{padding:0 16px}
+    .topbar-inner{height:62px}
+    .hero{padding:48px 0 44px}
+    .workspace{padding:40px 0 56px}
+    .panel{padding:22px 18px;border-radius:14px}
+    .card{padding:20px}
+    .book-card{padding:22px}
+    .row,.row.three{grid-template-columns:1fr}
+    .btn{padding:12px 16px}
+    .topbar .btn svg{display:none}
+    .receipt-row{grid-template-columns:1fr;gap:4px;padding:14px}
+    .receipt-row dt{padding-top:0}
+    .form-actions{flex-direction:column;align-items:stretch}
+    .form-actions .btn{width:100%}
+    .footer .wrap{flex-direction:column;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"></circle>
+          <circle cx="12" cy="12" r="5"></circle>
+          <circle cx="12" cy="12" r="1.4"></circle>
+        </svg>
+      </span>
+      <span>Interview Log</span>
+    </a>
+    <a class="btn btn-ghost btn-sm" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+        <path d="M16 2v4M8 2v4M3 10h18"></path>
+      </svg>
+      Book a call
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 11 3 3L22 4"></path>
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          </svg>
+          Customer discovery
+        </p>
+        <h1>The deal they lost is the <span class="accent">only</span> deal worth asking about.</h1>
+        <p class="lede">
+          Won deals tell you what people tolerate. Lost deals tell you where the work actually broke — who stalled,
+          at what moment, what they tried instead of you, and what they would have paid to never feel that again.
+          Log one interview here while it's still fresh.
+        </p>
+        <ul class="chips">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+            ~4 minutes per record
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
+            12 fields, all in their words
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4"></path></svg>
+            No recording, no transcript
+          </li>
+        </ul>
+      </div>
+
+      <div class="hero-card">
+        <h2>What every record needs</h2>
+        <ol class="steps">
+          <li><span class="step-num">1</span><span><b>The agency</b> — size and who actually owns the business.</span></li>
+          <li><span class="step-num">2</span><span><b>The last deal they lost</b> — the specific one, not an average.</span></li>
+          <li><span class="step-num">3</span><span><b>Where it stalled</b> — the exact moment it went sideways.</span></li>
+          <li><span class="step-num">4</span><span><b>What they did next</b> — the workaround you're quietly competing with.</span></li>
+          <li><span class="step-num">5</span><span><b>Their words</b> — verbatim, unedited, no paraphrase.</span></li>
+          <li><span class="step-num">6</span><span><b>Willingness to pay</b> — a number and how confidently they said it.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <div class="wrap grid-main">
+
+      <div class="panel">
+        <div class="panel-head" id="form-head">
+          <span class="panel-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="2" width="8" height="4" rx="1"></rect>
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <path d="M9 13h6M9 17h4"></path>
+            </svg>
+          </span>
+          <div>
+            <h2 class="panel-title">New interview record</h2>
+            <p class="panel-sub">Fill this in from the call, not from memory a week later. Fields marked <span class="req">*</span> are required.</p>
+          </div>
+        </div>
+
+        <form id="interview-form">
+
+          <fieldset>
+            <legend class="group-title">Who you talked to</legend>
+
+            <div class="row">
+              <div class="field">
+                <label for="agency_name">Agency name <span class="req" aria-hidden="true">*</span></label>
+                <input id="agency_name" name="agency_name" type="text" required autocomplete="organization" placeholder="e.g. Northline Studio">
+              </div>
+              <div class="field">
+                <label for="owner_name">Owner / founder name <span class="req" aria-hidden="true">*</span></label>
+                <input id="owner_name" name="owner_name" type="text" required autocomplete="name" placeholder="e.g. Priya Raman">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label for="agency_size">Agency size <span class="req" aria-hidden="true">*</span></label>
+                <select id="agency_size" name="agency_size" required>
+                  <option value="" selected disabled>Select a size</option>
+                  <option>Solo — just the owner</option>
+                  <option>2–5 people</option>
+                  <option>6–15 people</option>
+                  <option>16–40 people</option>
+                  <option>40+ people</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="interview_date">Interview date</label>
+                <input id="interview_date" name="interview_date" type="date">
+                <p class="hint">Defaults to today.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend class="group-title">The deal they lost</legend>
+
+            <div class="field">
+              <label for="lost_deal">The last deal they lost <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="lost_deal" name="lost_deal" required placeholder="Roughly how big, who it was with, and what was on the table. e.g. &quot;A £14k rebrand for a 12-person logistics firm. They'd already said yes to the scope on the second call.&quot;"></textarea>
+              <p class="hint">Rough numbers are fine. Vague is not — you want a deal you could point at.</p>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label for="stall_stage">Where it stalled <span class="req" aria-hidden="true">*</span></label>
+                <select id="stall_stage" name="stall_stage" required>
+                  <option value="" selected disabled>Select the stall point</option>
+                  <option>Ghosted after the first call</option>
+                  <option>Proposal sent, then went quiet</option>
+                  <option>Stuck in price negotiation</option>
+                  <option>Stuck in legal or procurement</option>
+                  <option>Delayed, then never came back</option>
+                  <option>Lost to a cheaper competitor</option>
+                  <option>Scope was misunderstood from the start</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="stall_detail">What happened at that moment</label>
+                <input id="stall_detail" name="stall_detail" type="text" placeholder="e.g. Two follow-ups, no reply after the 3rd week">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="did_next">What they did next <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="did_next" name="did_next" required placeholder="What did they actually try after the deal died — and how did it go? e.g. &quot;Emailed twice more, offered a 15% discount, then let it sit. Nothing came of it.&quot;"></textarea>
+              <p class="hint">This is usually the real workaround you're competing against.</p>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend class="group-title">In their words</legend>
+
+            <div class="field quote-field">
+              <label for="quote">Verbatim quote <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="quote" name="quote" required placeholder="“Honestly? By the time the proposal landed I'd already had to make the call myself.”"></textarea>
+              <p class="hint">Copy their words exactly — grammar, hedging and swearing included. Don't tidy it up.</p>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend class="group-title">Willingness to pay</legend>
+
+            <div class="row three">
+              <div class="field">
+                <label for="wtp_amount">Amount <span class="req" aria-hidden="true">*</span></label>
+                <div class="affix">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="wtp_amount" name="wtp_amount" type="number" min="0" step="50" inputmode="numeric" required placeholder="1500">
+                </div>
+              </div>
+              <div class="field">
+                <label for="wtp_cadence">Per <span class="req" aria-hidden="true">*</span></label>
+                <select id="wtp_cadence" name="wtp_cadence" required>
+                  <option value="" selected disabled>Select</option>
+                  <option>per month</option>
+                  <option>per quarter</option>
+                  <option>per year</option>
+                  <option>one-off project</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="wtp_signal">How they said it <span class="req" aria-hidden="true">*</span></label>
+                <select id="wtp_signal" name="wtp_signal" required>
+                  <option value="" selected disabled>Select</option>
+                  <option>Confirmed — would sign today</option>
+                  <option>Said yes out loud, no paperwork</option>
+                  <option>Interested, no number attached</option>
+                  <option>Balked at the price</option>
+                </select>
+              </div>
+            </div>
+            <p class="hint" style="margin-top:-8px;">If they never named a number, log what they said instead and pick the closest signal.</p>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <path d="M17 21v-8H7v8M7 3v5h8"></path>
+              </svg>
+              <span class="btn-label">Save record</span>
+            </button>
+            <p class="hint">Each record is submitted to your dashboard when you save, and kept in this session's list.</p>
+          </div>
+        </form>
+
+        <div id="success-state" class="success" hidden role="status" aria-live="polite">
+          <div class="success-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <path d="m9 11 3 3L22 4"></path>
+            </svg>
+          </div>
+          <h3 id="success-title">Record logged.</h3>
+          <p>It's in this session's list on the right, and it was submitted to your dashboard on save.</p>
+          <dl class="receipt" id="receipt"></dl>
+          <div class="success-actions">
+            <button type="button" class="btn btn-primary" id="log-another">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 5v14M5 12h14"></path>
+              </svg>
+              Log another interview
+            </button>
+            <a class="btn btn-ghost" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                <path d="M16 2v4M8 2v4M3 10h18"></path>
+              </svg>
+              Book the next call
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side">
+
+        <div class="card">
+          <h3>Before you hit save</h3>
+          <ul class="checks">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+              <span>It's a specific deal with a rough number attached, not "we lose deals on price".</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+              <span>The stall point is a moment in time, not a general feeling.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+              <span>The quote is copied, not summarised. Awkward phrasing is the useful part.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+              <span>There's a price and an honest note about how firmly they said it.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card book-card">
+          <h3>Want to pressure-test this record?</h3>
+          <p>Bring it to a 20-minute call. We'll pull the stall point apart and turn it into a concrete question for the next five interviews.</p>
+          <a class="btn btn-white" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+              <path d="M16 2v4M8 2v4M3 10h18"></path>
+            </svg>
+            Book 20 minutes
+          </a>
+          <span class="book-meta">Opens Calendly in a new tab.</span>
+        </div>
+
+        <div class="card">
+          <div class="log-head">
+            <h3>This session</h3>
+            <span class="log-count" id="log-count">0 records</span>
+          </div>
+          <p class="log-empty" id="log-empty">Nothing logged in this tab yet. Records you save appear here so you can see what you've already covered.</p>
+          <ul class="log-list" id="log-list"></ul>
+        </div>
+
+      </aside>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>Interview Log — a working log for discovery calls. Records are kept in this tab and submitted to your dashboard on save.</p>
+    <p><a href="https://calendly.com/seyimba1234" target="_blank" rel="noopener noreferrer">Book a call</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var form = document.getElementById('interview-form');
+  var formHead = document.getElementById('form-head');
+  var successState = document.getElementById('success-state');
+  var successTitle = document.getElementById('success-title');
+  var receipt = document.getElementById('receipt');
+  var logList = document.getElementById('log-list');
+  var logEmpty = document.getElementById('log-empty');
+  var logCount = document.getElementById('log-count');
+  var submitBtn = form.querySelector('button[type="submit"]');
+  var submitLabel = submitBtn.querySelector('.btn-label');
+  var submitLabelText = submitLabel.textContent;
+  var dateInput = document.getElementById('interview_date');
+  var entries = [];
+
+  function todayISO() {
+    var d = new Date();
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + month + '-' + day;
+  }
+
+  if (dateInput && !dateInput.value) {
+    dateInput.value = todayISO();
+  }
+
+  function setCount() {
+    var n = entries.length;
+    logCount.textContent = n === 1 ? '1 record' : n + ' records';
+  }
+
+  function money(amount) {
+    var num = Number(amount);
+    if (!isFinite(num)) return String(amount);
+    return '$' + num.toLocaleString();
+  }
+
+  function renderLog() {
+    logList.textContent = '';
+
+    if (entries.length === 0) {
+      logEmpty.hidden = false;
+      setCount();
+      return;
+    }
+
+    logEmpty.hidden = true;
+
+    entries.forEach(function (entry) {
+      var li = document.createElement('li');
+      li.className = 'log-item';
+
+      var agency = document.createElement('span');
+      agency.className = 'log-agency';
+      agency.textContent = entry.agency_name || 'Untitled interview';
+
+      var meta = document.createElement('span');
+      meta.className = 'log-meta';
+      var bits = [];
+      if (entry.owner_name) bits.push(entry.owner_name);
+      if (entry.stall_stage) bits.push(entry.stall_stage);
+      if (entry.wtp_amount) bits.push(money(entry.wtp_amount) + ' ' + (entry.wtp_cadence || ''));
+      meta.textContent = bits.join(' · ');
+
+      li.appendChild(agency);
+      li.appendChild(meta);
+      logList.appendChild(li);
+    });
+
+    setCount();
+  }
+
+  function renderReceipt(data) {
+    receipt.textContent = '';
+
+    var rows = [
+      ['Agency', data.agency_name + (data.agency_size ? ' · ' + data.agency_size : '')],
+      ['Owner', data.owner_name || '—'],
+      ['Stalled at', data.stall_stage || '—'],
+      ['Would pay', data.wtp_amount ? money(data.wtp_amount) + ' ' + (data.wtp_cadence || '') + ' (' + (data.wtp_signal || 'signal not noted') + ')' : '—'],
+      ['Quote', '“' + (data.quote || '') + '”', true]
+    ];
+
+    rows.forEach(function (row) {
+      var wrapEl = document.createElement('div');
+      wrapEl.className = 'receipt-row' + (row[2] ? ' quote-row' : '');
+
+      var dt = document.createElement('dt');
+      dt.textContent = row[0];
+
+      var dd = document.createElement('dd');
+      dd.textContent = row[1];
+
+      wrapEl.appendChild(dt);
+      wrapEl.appendChild(dd);
+      receipt.appendChild(wrapEl);
+    });
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    var data = {};
+    new FormData(form).forEach(function (value, key) {
+      data[key] = typeof value === 'string' ? value.trim() : value;
+    });
+    data.logged_at = new Date().toISOString();
+
+    submitBtn.disabled = true;
+    submitLabel.textContent = 'Saving…';
+
+    function finish() {
+      entries.unshift(data);
+      renderLog();
+      renderReceipt(data);
+
+      successTitle.textContent = 'Logged — ' + (data.agency_name || 'record saved') + '.';
+
+      formHead.hidden = true;
+      form.hidden = true;
+      successState.hidden = false;
+
+      submitBtn.disabled = false;
+      submitLabel.textContent = submitLabelText;
+
+      if (successState.scrollIntoView) {
+        successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    if (window.STARTUPVERSE_SUBMIT_URL) {
+      fetch(window.STARTUPVERSE_SUBMIT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(finish, finish);
+    } else {
+      finish();
+    }
+  });
+
+  document.getElementById('log-another').addEventListener('click', function () {
+    form.reset();
+    if (dateInput) dateInput.value = todayISO();
+    successState.hidden = true;
+    form.hidden = false;
+    formHead.hidden = false;
+    var firstField = document.getElementById('agency_name');
+    if (firstField && firstField.focus) firstField.focus();
+    formHead.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  setCount();
+})();
+</script>
+
+</body>
+</html>

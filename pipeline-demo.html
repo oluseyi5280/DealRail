@@ -1,979 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DealRail — Pipeline demo</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Northbeam — Agency Deal Pipeline</title>
 <style>
   :root{
-    --bg:#050D1B;
-    --surface:rgba(14,30,55,.72);
-    --surface-2:#17304F;
-    --line:rgba(255,255,255,.07);
-    --line-strong:rgba(255,255,255,.14);
-    --text:#E7EEFA;
-    --muted:#8BA0C2;
-    --dim:#63799C;
-    --accent:#3E7BFF;
-    --accent-2:#6C9BFF;
-    --green:#33D6A6;
-    --amber:#F4B740;
-    --violet:#9B8BFF;
-    --radius:18px;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,"Helvetica Neue",Arial,sans-serif;
-    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --ink:#12132a;
+    --muted:#6d6e8a;
+    --line:#e5e5f0;
+    --bg:#f5f5fa;
+    --card:#ffffff;
+    --accent:#5b3df5;
+    --accent-soft:#ece8ff;
+    --won:#0f9d6e;
+    --won-soft:#e3f6ee;
+    --lost:#b4453f;
+    --lost-soft:#fbeae9;
   }
-
-  *,*::before,*::after{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  [hidden]{display:none !important}
-
+  *{box-sizing:border-box}
+  html,body{margin:0}
   body{
-    font-family:var(--sans);
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
-  }
-
-  .glow{
-    position:fixed;
-    inset:0;
-    z-index:0;
-    pointer-events:none;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color:var(--ink);
     background:
-      radial-gradient(900px 520px at 10% -12%, rgba(62,123,255,.22), transparent 62%),
-      radial-gradient(760px 460px at 92% -6%, rgba(155,139,255,.14), transparent 64%),
-      linear-gradient(180deg,#050D1B 0%, #050D1B 62%, #040A15 100%);
+      radial-gradient(900px 480px at 88% -12%, #e6e1ff 0%, rgba(230,225,255,0) 62%),
+      var(--bg);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased;
   }
+  a{color:inherit}
 
   /* ---------- top bar ---------- */
   .topbar{
-    position:sticky;
-    top:0;
-    z-index:20;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    padding:16px 32px;
-    background:rgba(5,13,27,.74);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:14px 32px;
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
-  .brand{display:flex;align-items:center;gap:12px;min-width:0}
-  .brand-mark{
-    width:36px;height:36px;border-radius:11px;
-    display:grid;place-items:center;
-    background:linear-gradient(140deg,#3E7BFF,#7C5CFF);
-    box-shadow:0 10px 26px -12px rgba(62,123,255,.95);
-    color:#fff;flex:0 0 auto;
-  }
-  .brand-name{font-size:1.0625rem;font-weight:700;letter-spacing:-.02em}
-
-  .btn{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:11px 18px;border-radius:999px;
-    font-size:.9375rem;font-weight:600;
-    text-decoration:none;border:1px solid transparent;
-    cursor:pointer;font-family:inherit;
-    transition:transform .15s ease, background .15s ease, border-color .15s ease;
-    white-space:nowrap;
-  }
-  .btn-primary{
-    background:linear-gradient(135deg,#3E7BFF,#6C5CFF);
+  .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:-.01em; text-decoration:none}
+  .mark{
+    width:30px; height:30px; border-radius:9px;
+    display:grid; place-items:center;
+    background:linear-gradient(140deg, var(--accent), #8f5cff);
     color:#fff;
-    box-shadow:0 14px 30px -16px rgba(62,123,255,.95);
+    box-shadow:0 6px 14px rgba(91,61,245,.28);
   }
-  .btn-primary:hover{transform:translateY(-1px)}
-  .btn-ghost{
-    background:rgba(255,255,255,.04);
-    border-color:var(--line-strong);
-    color:var(--text);
+  .mark svg{width:17px; height:17px}
+  .cta{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 18px; border-radius:10px;
+    background:var(--accent); color:#fff;
+    font-size:.92rem; font-weight:600; text-decoration:none;
+    box-shadow:0 8px 18px rgba(91,61,245,.3);
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
   }
-  .btn-ghost:hover{background:rgba(255,255,255,.08)}
-  .btn .short{display:none}
+  .cta:hover{background:#4f31e6; transform:translateY(-1px); box-shadow:0 10px 22px rgba(91,61,245,.34)}
+  .cta svg{width:16px; height:16px}
 
-  /* ---------- layout ---------- */
-  .wrap{
-    position:relative;
-    z-index:1;
-    flex:1;
-    width:100%;
-    max-width:1320px;
-    margin:0 auto;
-    padding:40px 32px 72px;
+  /* ---------- page ---------- */
+  .wrap{padding:32px 32px 56px; max-width:1400px; margin:0 auto}
+  .intro{max-width:620px; margin-bottom:28px}
+  .eyebrow{
+    margin:0 0 12px; font-size:.75rem; font-weight:700;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--accent);
   }
-
-  /* ---------- live chip ---------- */
-  .live{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:7px 13px;border-radius:999px;
-    background:rgba(51,214,166,.1);
-    border:1px solid rgba(51,214,166,.26);
-    font-size:.6875rem;font-weight:700;
-    letter-spacing:.09em;text-transform:uppercase;
-    color:#7FE9CB;white-space:nowrap;
+  h1{
+    margin:0 0 12px;
+    font-size:clamp(1.9rem, 4.5vw, 2.75rem);
+    line-height:1.08; letter-spacing:-.03em; font-weight:800;
   }
-  .pulse{
-    width:7px;height:7px;border-radius:50%;
-    background:#33D6A6;
-    animation:pulse 2.4s infinite;
-  }
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(51,214,166,.55)}
-    70%{box-shadow:0 0 0 9px rgba(51,214,166,0)}
-    100%{box-shadow:0 0 0 0 rgba(51,214,166,0)}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .pulse{animation:none}
-    .deal-card,.btn{transition:none}
-  }
-
-  /* ---------- page head ---------- */
-  .page-head{
-    display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
-    gap:24px;margin-bottom:32px;
-  }
-  .title{
-    font-size:clamp(1.9rem,3.8vw,2.7rem);
-    font-weight:700;letter-spacing:-.03em;
-    line-height:1.1;margin:0 0 10px;
-  }
-  .subtitle{
-    color:var(--muted);font-size:1rem;line-height:1.6;
-    max-width:64ch;margin:0;
-  }
-
-  /* ---------- roll-up strip ---------- */
-  .rollup{
-    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
-    gap:24px 40px;
-    padding:24px;
-    border-radius:var(--radius);
-    background:linear-gradient(135deg,rgba(23,48,79,.85),rgba(14,30,55,.85));
-    border:1px solid var(--line);
-    margin-bottom:32px;
-  }
-  .stats{display:flex;flex-wrap:wrap;gap:16px 40px}
-  .stat .num{
-    font-size:1.75rem;font-weight:700;letter-spacing:-.02em;line-height:1.1;
-    font-variant-numeric:tabular-nums;
-  }
-  .stat .num .unit{font-size:1rem;font-weight:600;color:var(--muted)}
-  .stat .lbl{font-size:.8125rem;color:var(--muted);margin-top:6px}
-  .stage-counts{display:flex;flex-wrap:wrap;gap:8px}
-  .sc{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:7px 12px;border-radius:999px;
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--line);
-    font-size:.8125rem;color:var(--muted);
-  }
-  .sc b{color:var(--text);font-variant-numeric:tabular-nums}
-  .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+  .lede{margin:0; color:var(--muted); font-size:1rem; line-height:1.6}
 
   /* ---------- board ---------- */
-  .board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
-  .board::-webkit-scrollbar{height:8px}
-  .board::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:999px}
-
+  .board{
+    display:grid;
+    grid-template-columns:repeat(5, minmax(232px, 1fr));
+    gap:16px;
+    overflow-x:auto;
+    padding-bottom:10px;
+  }
   .col{
-    background:rgba(14,30,55,.62);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:16px;
-    display:flex;flex-direction:column;gap:12px;
-    min-height:360px;
-  }
-  .col-head{display:flex;align-items:center;gap:10px;padding:4px 4px 8px}
-  .col-name{font-size:.875rem;font-weight:600;color:#C9D7EE;letter-spacing:.01em}
-  .col-count{
-    margin-left:auto;font-size:.75rem;font-weight:700;
-    color:var(--muted);background:rgba(255,255,255,.06);
-    border-radius:999px;padding:2px 9px;
-    font-variant-numeric:tabular-nums;
-  }
-  .col-body{display:flex;flex-direction:column;gap:12px}
-  .col-empty{
-    border:1px dashed var(--line-strong);
-    border-radius:12px;padding:18px 16px;
-    font-size:.8125rem;color:var(--dim);text-align:center;
-  }
-
-  /* ---------- deal card ---------- */
-  .deal-card{
-    width:100%;
-    display:flex;flex-direction:column;gap:12px;
-    text-align:left;font-family:inherit;color:inherit;
-    background:linear-gradient(160deg,#17304F,#12253F);
+    display:flex; flex-direction:column;
+    background:rgba(255,255,255,.72);
     border:1px solid var(--line);
     border-radius:14px;
-    padding:16px;
-    cursor:pointer;
-    transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    padding:14px 12px 12px;
+    min-height:280px;
+    transition:background .15s ease, border-color .15s ease;
   }
-  .deal-card:hover{
-    transform:translateY(-2px);
-    border-color:rgba(108,155,255,.45);
-    box-shadow:0 18px 36px -22px rgba(0,0,0,.95);
+  .col.over{background:var(--accent-soft); border-color:#c7bcfd}
+  .col-head{display:flex; align-items:center; gap:8px; padding:0 4px 12px}
+  .col-head h2{margin:0; font-size:.82rem; font-weight:700; letter-spacing:.01em; flex:1}
+  .dot{width:8px; height:8px; border-radius:50%; flex:none}
+  .col[data-stage="lead"] .dot{background:#94a3b8}
+  .col[data-stage="qualified"] .dot{background:#0ea5e9}
+  .col[data-stage="proposal"] .dot{background:var(--accent)}
+  .col[data-stage="negotiation"] .dot{background:#f59e0b}
+  .col[data-stage="closed"] .dot{background:var(--won)}
+  .count{
+    font-size:.72rem; font-weight:700; color:var(--muted);
+    background:#f0f0f7; border-radius:999px; padding:2px 8px;
   }
-  .deal-card:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+  .cards{display:flex; flex-direction:column; gap:10px; flex:1}
 
-  .card-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .type-badge{
-    font-size:.6875rem;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;
-    padding:4px 9px;border-radius:6px;
-    background:rgba(62,123,255,.16);color:#9CB9FF;
-    white-space:nowrap;
-  }
-  .t-new{background:rgba(155,139,255,.16);color:#C3B8FF}
-  .t-platform{background:rgba(51,214,166,.14);color:#7FE9CB}
-  .t-renewal{background:rgba(244,183,64,.14);color:#F7CF83}
-  .deal-value{
-    font-size:.8125rem;font-weight:600;color:var(--muted);
-    font-variant-numeric:tabular-nums;
-  }
-  .deal-name{
-    font-size:1.0625rem;font-weight:700;letter-spacing:-.02em;
-    margin:0;line-height:1.25;
-  }
-  .nextstep{
-    display:flex;gap:10px;align-items:flex-start;
-    padding:10px 12px;border-radius:10px;
-    background:rgba(255,255,255,.035);
+  /* ---------- cards ---------- */
+  .card{
+    background:var(--card);
     border:1px solid var(--line);
+    border-radius:11px;
+    padding:12px 13px;
+    cursor:grab;
+    box-shadow:0 1px 2px rgba(18,19,42,.05);
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
   }
-  .nextstep svg{color:var(--accent-2);flex:0 0 auto;margin-top:3px}
-  .ns-label{
-    display:block;font-size:.6875rem;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
+  .card:hover{transform:translateY(-1px); border-color:#d6d3ee; box-shadow:0 8px 18px rgba(18,19,42,.08)}
+  .card.dragging{opacity:.45}
+  .deal{margin:0 0 3px; font-size:.92rem; font-weight:650; line-height:1.3; letter-spacing:-.01em}
+  .client{margin:0 0 10px; font-size:.8rem; color:var(--muted)}
+  .meta{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .value{font-size:.88rem; font-weight:750; letter-spacing:-.01em}
+  .tag{
+    font-size:.68rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--accent); background:var(--accent-soft);
+    padding:3px 8px; border-radius:999px;
   }
-  .ns-val{display:block;font-size:.875rem;font-weight:600;margin-top:3px;color:#DCE7F8}
-  .card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .owner{display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--muted);min-width:0}
-  .avatar{
-    width:24px;height:24px;border-radius:50%;flex:0 0 auto;
-    display:grid;place-items:center;
-    font-size:.6875rem;font-weight:700;color:#08152A;
-    background:linear-gradient(140deg,#7FD7FF,#8B9CFF);
-  }
-  .time{font-size:.75rem;color:var(--dim);white-space:nowrap}
-
-  /* ---------- deal room ---------- */
-  .back{
-    display:inline-flex;align-items:center;gap:8px;
-    font-family:inherit;font-size:.875rem;font-weight:600;
-    color:var(--muted);
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--line);
-    border-radius:999px;
-    padding:9px 16px;margin-bottom:28px;cursor:pointer;
-    transition:color .15s ease,border-color .15s ease;
-  }
-  .back:hover{color:var(--text);border-color:var(--line-strong)}
-  .back:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
-
-  .room-head{
-    display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
-    gap:24px;margin-bottom:24px;
-  }
-  .room-head-main{min-width:0}
-  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-  .stage-pill{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:6px 12px;border-radius:999px;
-    background:rgba(255,255,255,.05);
-    border:1px solid var(--line);
-    font-size:.75rem;font-weight:600;color:#C9D7EE;
-  }
-  .room-title{
-    font-size:clamp(1.9rem,4vw,2.75rem);
-    font-weight:700;letter-spacing:-.03em;line-height:1.1;margin:0;
-  }
-  .room-sub{color:var(--muted);font-size:.9375rem;line-height:1.6;margin:12px 0 0}
-
-  .share{
-    display:flex;flex-wrap:wrap;align-items:center;gap:14px;
-    padding:14px 18px;border-radius:14px;
-    background:rgba(62,123,255,.08);
-    border:1px solid rgba(62,123,255,.26);
-    margin-bottom:32px;
-  }
-  .share-ico{
-    width:34px;height:34px;border-radius:10px;flex:0 0 auto;
-    display:grid;place-items:center;
-    background:rgba(62,123,255,.18);color:#9CB9FF;
-  }
-  .share-text{display:flex;flex-direction:column;gap:3px;min-width:0}
-  .share-label{
-    font-size:.6875rem;font-weight:700;letter-spacing:.09em;
-    text-transform:uppercase;color:var(--muted);
-  }
-  .share-url{
-    font-family:var(--mono);font-size:.875rem;color:#D3E1FB;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  }
-  .copy-btn{
-    margin-left:auto;
-    display:inline-flex;align-items:center;gap:8px;
-    font-family:inherit;font-size:.8125rem;font-weight:600;
-    color:#DCE7F8;background:rgba(255,255,255,.06);
-    border:1px solid var(--line-strong);
-    border-radius:999px;padding:8px 14px;cursor:pointer;
-    transition:background .15s ease,border-color .15s ease,color .15s ease;
-  }
-  .copy-btn:hover{background:rgba(255,255,255,.1)}
-  .copy-btn.ok{
-    color:#7FE9CB;border-color:rgba(51,214,166,.4);
-    background:rgba(51,214,166,.12);
-  }
-
-  .room-grid{
-    display:grid;
-    grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
-    gap:24px;align-items:start;
-  }
-  .panel{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:24px;
-    margin-bottom:24px;
-  }
-  .panel h2{
-    font-size:.75rem;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--muted);
-    margin:0 0 18px;
-  }
-
-  .scope{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
-  .scope li{display:flex;gap:12px;align-items:flex-start;font-size:.9375rem;line-height:1.55;color:#D6E2F5}
-  .scope svg{flex:0 0 auto;margin-top:4px;color:var(--green)}
-
-  .price-row{
-    display:flex;justify-content:space-between;gap:16px;
-    padding:13px 0;border-bottom:1px solid var(--line);
-    font-size:.9375rem;line-height:1.5;color:#D6E2F5;
-  }
-  .price-row:last-of-type{border-bottom:none}
-  .price-row .amt{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .price-total{
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-    margin-top:16px;padding:16px 18px;border-radius:12px;
-    background:rgba(62,123,255,.1);
-    border:1px solid rgba(62,123,255,.24);
-    font-weight:700;
-  }
-  .price-total .amt{font-size:1.25rem;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-  .price-note{font-size:.75rem;color:var(--dim);margin:14px 0 0;line-height:1.5}
-
-  .file{
-    display:flex;align-items:center;gap:14px;
-    padding:12px;border-radius:12px;
-    transition:background .15s ease;
-  }
-  .file:hover{background:rgba(255,255,255,.03)}
-  .file-icon{
-    width:36px;height:36px;border-radius:10px;flex:0 0 auto;
-    display:grid;place-items:center;
-    background:rgba(255,255,255,.05);color:#9CB9FF;
-  }
-  .file-name{font-size:.9375rem;font-weight:600;word-break:break-word}
-  .file-meta{font-size:.75rem;color:var(--dim);margin-top:3px}
-
-  .facts{margin:0;display:flex;flex-direction:column}
-  .fact{
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-    padding:13px 0;border-bottom:1px solid var(--line);
-  }
-  .fact:last-child{border-bottom:none}
-  .fact dt{font-size:.8125rem;color:var(--muted)}
-  .fact dd{
-    margin:0;font-size:.875rem;font-weight:600;text-align:right;
-    display:flex;align-items:center;gap:8px;justify-content:flex-end;
-  }
-
-  .tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
-  .tl li{position:relative;padding-left:22px;font-size:.875rem;line-height:1.5;color:#C6D5EC}
-  .tl li::before{
-    content:"";position:absolute;left:0;top:5px;
-    width:9px;height:9px;border-radius:50%;
-    background:var(--accent);
-    box-shadow:0 0 0 4px rgba(62,123,255,.14);
-  }
-  .tl li span{display:block;color:var(--dim);font-size:.75rem;margin-top:4px}
+  .tag.won{color:var(--won); background:var(--won-soft)}
+  .tag.lost{color:var(--lost); background:var(--lost-soft)}
+  .card.lost .value{color:var(--muted)}
 
   /* ---------- footer ---------- */
   .foot{
-    position:relative;z-index:1;
-    border-top:1px solid var(--line);
-    padding:32px;
-    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
-    gap:16px;
-    color:var(--dim);font-size:.8125rem;line-height:1.5;
+    margin-top:28px; padding-top:20px; border-top:1px solid var(--line);
+    font-size:.85rem; color:var(--muted);
   }
-  .foot-cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+  .foot a{color:var(--accent); font-weight:650; text-decoration:none}
+  .foot a:hover{text-decoration:underline}
 
-  /* ---------- responsive ---------- */
-  @media (max-width:1180px){
-    .board{
-      display:flex;
-      overflow-x:auto;
-      padding-bottom:8px;
-      scroll-snap-type:x proximity;
-    }
-    .board .col{flex:0 0 272px;scroll-snap-align:start}
-  }
-  @media (max-width:900px){
-    .room-grid{grid-template-columns:1fr}
-  }
   @media (max-width:640px){
     .topbar{padding:12px 16px}
-    .wrap{padding:24px 16px 56px}
-    .rollup{padding:20px;gap:20px}
-    .stats{gap:16px 28px}
-    .stat .num{font-size:1.4rem}
-    .panel{padding:20px}
-    .btn{padding:10px 15px;font-size:.875rem}
-    .btn .full{display:none}
-    .btn .short{display:inline}
-    .foot{padding:24px 16px}
-    .copy-btn{margin-left:0;width:100%;justify-content:center}
-    .banana{display:none}
+    .mark{width:28px; height:28px}
+    .cta{padding:9px 14px; font-size:.86rem}
+    .wrap{padding:24px 16px 44px}
+    .board{grid-template-columns:repeat(5, minmax(215px, 1fr)); gap:12px}
+    .col{padding:12px 10px 10px; min-height:240px}
+    .intro{margin-bottom:20px}
   }
 </style>
 </head>
 <body>
-<div class="glow" aria-hidden="true"></div>
 
 <header class="topbar">
-  <div class="brand">
-    <span class="brand-mark" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M2 12h20"/>
-        <circle cx="8" cy="12" r="3.2"/>
-        <circle cx="18" cy="12" r="1.6"/>
+  <a class="brand" href="#">
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19V5"/><path d="M4 13h5l4-6h7"/>
       </svg>
     </span>
-    <span class="brand-name">DealRail</span>
-  </div>
-  <a class="btn btn-primary" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">
-    <span class="full">Book a 20-minute call</span>
-    <span class="short">Book a call</span>
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-      <path d="M15 3h6v6"/>
-      <path d="M10 14L21 3"/>
+    <span>Northbeam</span>
+  </a>
+  <a class="cta" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
     </svg>
+    Book a call
   </a>
 </header>
 
 <main class="wrap">
+  <div class="intro">
+    <p class="eyebrow">Pipeline · Q3</p>
+    <h1>Agency deal pipeline</h1>
+    <p class="lede">Fictional seed data for a demo agency. Drag any card to move it between stages.</p>
+  </div>
 
-  <!-- ============ SCREEN 1 — PIPELINE BOARD ============ -->
-  <section id="screen-board">
-    <div class="page-head">
-      <div>
-        <h1 class="title">Pipeline</h1>
-        <p class="subtitle">Every active deal, the next step in motion, and who owns it — on one board. Sample data for customer interviews, not real customers.</p>
+  <div class="board" id="board">
+
+    <section class="col" data-stage="lead" aria-label="Lead stage">
+      <div class="col-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h2>Lead</h2>
+        <span class="count">3</span>
       </div>
-      <span class="live"><span class="pulse"></span>Live</span>
-    </div>
+      <div class="cards">
+        <article class="card" draggable="true">
+          <p class="deal">Website Redesign</p>
+          <p class="client">Brightloom Coffee</p>
+          <div class="meta"><span class="value">$18,500</span><span class="tag">Project</span></div>
+        </article>
+        <article class="card" draggable="true">
+          <p class="deal">SEO Sprint</p>
+          <p class="client">Fernwood Clinics</p>
+          <div class="meta"><span class="value">$6,200</span><span class="tag">Retainer</span></div>
+        </article>
+        <article class="card" draggable="true">
+          <p class="deal">Brand Refresh</p>
+          <p class="client">Tabby &amp; Co.</p>
+          <div class="meta"><span class="value">$12,000</span><span class="tag">Project</span></div>
+        </article>
+      </div>
+    </section>
 
-    <div class="rollup" id="rollup"></div>
-    <div class="board" id="board"></div>
-  </section>
+    <section class="col" data-stage="qualified" aria-label="Qualified stage">
+      <div class="col-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h2>Qualified</h2>
+        <span class="count">2</span>
+      </div>
+      <div class="cards">
+        <article class="card" draggable="true">
+          <p class="deal">Paid Social Retainer</p>
+          <p class="client">Northgate Fitness</p>
+          <div class="meta"><span class="value">$9,600</span><span class="tag">Retainer</span></div>
+        </article>
+        <article class="card" draggable="true">
+          <p class="deal">CRM Migration</p>
+          <p class="client">Copperline Logistics</p>
+          <div class="meta"><span class="value">$24,000</span><span class="tag">Project</span></div>
+        </article>
+      </div>
+    </section>
 
-  <!-- ============ SCREEN 2 — DEAL ROOM ============ -->
-  <section id="screen-room" hidden>
-    <button class="back" id="backBtn" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M15 18l-6-6 6-6"/>
-      </svg>
-      Back to pipeline
-    </button>
-    <div id="roomContent"></div>
-  </section>
+    <section class="col" data-stage="proposal" aria-label="Proposal stage">
+      <div class="col-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h2>Proposal</h2>
+        <span class="count">3</span>
+      </div>
+      <div class="cards">
+        <article class="card" draggable="true">
+          <p class="deal">E-commerce Replatform</p>
+          <p class="client">Wilder Goods</p>
+          <div class="meta"><span class="value">$62,000</span><span class="tag">Project</span></div>
+        </article>
+        <article class="card" draggable="true">
+          <p class="deal">Landing Page System</p>
+          <p class="client">Halcyon Labs</p>
+          <div class="meta"><span class="value">$14,500</span><span class="tag">Project</span></div>
+        </article>
+        <article class="card" draggable="true">
+          <p class="deal">Content Engine</p>
+          <p class="client">Roost Realty</p>
+          <div class="meta"><span class="value">$21,000</span><span class="tag">Retainer</span></div>
+        </article>
+      </div>
+    </section>
 
+    <section class="col" data-stage="negotiation" aria-label="Negotiation stage">
+      <div class="col-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h2>Negotiation</h2>
+        <span class="count">2</span>
+      </div>
+      <div class="cards">
+        <article class="card" draggable="true">
+          <p class="deal">Automation Retainer</p>
+          <p class="client">Amber Bay Hotels</p>
+          <div class="meta"><span class="value">$38,000</span><span class="tag">Retainer</span></div>
+        </article>
+        <article class="card" draggable="true">
+          <p class="deal">Product Launch Campaign</p>
+          <p class="client">Pico Devices</p>
+          <div class="meta"><span class="value">$47,500</span><span class="tag">Campaign</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="col" data-stage="closed" aria-label="Won and lost">
+      <div class="col-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h2>Won / Lost</h2>
+        <span class="count">2</span>
+      </div>
+      <div class="cards">
+        <article class="card" draggable="true">
+          <p class="deal">Annual Retainer</p>
+          <p class="client">Verdant Studio</p>
+          <div class="meta"><span class="value">$72,000</span><span class="tag won">Won</span></div>
+        </article>
+        <article class="card lost" draggable="true">
+          <p class="deal">Site Build</p>
+          <p class="client">Marlowe Legal</p>
+          <div class="meta"><span class="value">$33,000</span><span class="tag lost">Lost</span></div>
+        </article>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="foot">
+    Every deal above is fictional seed data. Want this mapped to your real pipeline?
+    <a href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">Book a call</a>.
+  </p>
 </main>
 
-<footer class="foot">
-  <span>DealRail demo · four seeded deals · no login, no backend · figures and files are illustrative</span>
-  <span class="foot-cta">
-    <span>Want to walk through your own pipeline?</span>
-    <a class="btn btn-ghost" href="https://calendly.com/seyimba1234" target="_blank" rel="noopener">
-      <span class="full">Book a 20-minute call</span>
-      <span class="short">Book a call</span>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-        <path d="M15 3h6v6"/>
-        <path d="M10 14L21 3"/>
-      </svg>
-    </a>
-  </span>
-</footer>
-
 <script>
-(function(){
-  "use strict";
+  var board = document.getElementById('board');
+  var dragged = null;
 
-  var CALL_URL = "https://calendly.com/seyimba1234";
-  var ROOM_HOST = "dealrail.app";
-  var STAGES_MOVED_THIS_WEEK = 12;
+  Array.prototype.forEach.call(board.querySelectorAll('.card'), function (card) {
+    card.addEventListener('dragstart', function () {
+      dragged = card;
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', function () {
+      card.classList.remove('dragging');
+      dragged = null;
+      updateCounts();
+    });
+  });
 
-  /* ---------------- icons (single consistent line style) ---------------- */
-  var ICONS = {
-    chevronLeft:'<path d="M15 18l-6-6 6-6"/>',
-    arrowRight:'<path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>',
-    external:'<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/>',
-    link:'<path d="M10.5 13.5a4.5 4.5 0 0 0 6.4.4l2.4-2.4a4.5 4.5 0 0 0-6.4-6.4l-1.4 1.4"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4-.4l-2.4 2.4a4.5 4.5 0 0 0 6.4 6.4l1.4-1.4"/>',
-    copy:'<rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5.5 15H4.5A2.5 2.5 0 0 1 2 12.5v-8A2.5 2.5 0 0 1 4.5 2h8A2.5 2.5 0 0 1 15 4.5v1"/>',
-    check:'<path d="M20 6L9 17l-5-5"/>',
-    file:'<path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/>',
-    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/>'
-  };
+  Array.prototype.forEach.call(board.querySelectorAll('.col'), function (col) {
+    var list = col.querySelector('.cards');
 
-  function icon(name, size){
-    var s = size || 16;
-    return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-           'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-           (ICONS[name] || '') + '</svg>';
-  }
+    col.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      col.classList.add('over');
+    });
+    col.addEventListener('dragleave', function () {
+      col.classList.remove('over');
+    });
+    col.addEventListener('drop', function (e) {
+      e.preventDefault();
+      col.classList.remove('over');
+      if (dragged) {
+        list.appendChild(dragged);
+      }
+      updateCounts();
+    });
+  });
 
-  /* ---------------- data ---------------- */
-  var STAGES = [
-    {id:'discovery', name:'Discovery',       color:'#9B8BFF'},
-    {id:'pricing',   name:'Pricing',         color:'#3E7BFF'},
-    {id:'security',  name:'Security review', color:'#F4B740'},
-    {id:'contract',  name:'Contract sent',   color:'#33D6A6'},
-    {id:'closed',    name:'Closed',          color:'#5C7A9E'}
-  ];
-
-  var DEALS = [
-    {
-      id:'northwind', slug:'northwind-8f2a',
-      name:'Northwind', type:'Expansion', typeKey:'expansion',
-      owner:'Priya Raman', initials:'PR',
-      stage:'contract', nextStep:'Contract sent', last:'12m ago',
-      value:'$148K', valueFull:'$148,000', amount:148000,
-      scope:[
-        'Add three regions to the existing workspace — EMEA, APAC and LATAM',
-        'Advanced routing plus SSO for 240 seats',
-        'Onboarding workshops for four regional teams',
-        'Quarterly business reviews with the platform lead'
-      ],
-      pricing:[
-        {label:'Platform expansion — 240 seats, 12 months', amount:'$118,000'},
-        {label:'Premium support', amount:'$18,000'},
-        {label:'Implementation (one-time)', amount:'$12,000'}
-      ],
-      total:'$148,000',
-      note:'Net 30. Quote valid for 21 days from the date it was sent.',
-      files:[
-        {name:'Northwind_Expansion_Order_Form.pdf', meta:'412 KB · viewed 12m ago'},
-        {name:'DealRail_Security_Overview.pdf', meta:'1.1 MB · viewed yesterday'},
-        {name:'Northwind_SSO_Scoping.xlsx', meta:'88 KB · viewed 2 days ago'}
-      ],
-      timeline:[
-        {text:'Contract sent to the Northwind VP of Operations', time:'12m ago'},
-        {text:'Pricing approved internally by finance', time:'3h ago'},
-        {text:'SSO scoping call with the Northwind IT team', time:'yesterday'},
-        {text:'Expansion brought forward from next quarter', time:'4 days ago'}
-      ]
-    },
-    {
-      id:'arcadia', slug:'arcadia-labs-4c71',
-      name:'Arcadia Labs', type:'New logo', typeKey:'new',
-      owner:'Daniel Okafor', initials:'DO',
-      stage:'security', nextStep:'Security review', last:'1h ago',
-      value:'$96K', valueFull:'$96,000', amount:96000,
-      scope:[
-        '12-month agreement covering 60 seats',
-        'SSO and SCIM provisioning',
-        'SOC 2 Type II report and the latest pen-test summary',
-        'Two onboarding sessions for the platform team'
-      ],
-      pricing:[
-        {label:'Platform — 60 seats, 12 months', amount:'$78,000'},
-        {label:'Premium support', amount:'$12,000'},
-        {label:'Onboarding (two sessions)', amount:'$6,000'}
-      ],
-      total:'$96,000',
-      note:'Security review is the last gate before signature.',
-      files:[
-        {name:'Arcadia_Security_Questionnaire.xlsx', meta:'146 KB · viewed 1h ago'},
-        {name:'SOC2_Type_II_Report_2025.pdf', meta:'2.4 MB · viewed 3h ago'},
-        {name:'DealRail_DPA_final.pdf', meta:'310 KB · viewed yesterday'}
-      ],
-      timeline:[
-        {text:'Security questionnaire returned to Arcadia', time:'1h ago'},
-        {text:'Pen-test summary shared with their security lead', time:'3h ago'},
-        {text:'Technical validation call completed', time:'yesterday'},
-        {text:'Inbound intro call after a conference', time:'9 days ago'}
-      ]
-    },
-    {
-      id:'meridian', slug:'meridian-2b90',
-      name:'Meridian', type:'Platform', typeKey:'platform',
-      owner:'Lena Fischer', initials:'LF',
-      stage:'pricing', nextStep:'Pricing shared', last:'4h ago',
-      value:'$212K', valueFull:'$212,000', amount:212000,
-      scope:[
-        'Platform licence for three business units — 420 seats',
-        'EU data residency for regulated workflows',
-        'Dedicated solutions architect for the first two quarters',
-        'API volume uplift to 5M calls per month'
-      ],
-      pricing:[
-        {label:'Platform licence — 420 seats, 12 months', amount:'$172,000'},
-        {label:'EU data residency add-on', amount:'$24,000'},
-        {label:'Dedicated solutions architect', amount:'$16,000'}
-      ],
-      total:'$212,000',
-      note:'A two-year commitment option is available at a 9% discount.',
-      files:[
-        {name:'Meridian_Pricing_Summary.pdf', meta:'220 KB · viewed 4h ago'},
-        {name:'DealRail_Architecture_Review.pdf', meta:'1.6 MB · viewed yesterday'},
-        {name:'Meridian_Platform_Overview.pdf', meta:'980 KB · viewed 3 days ago'}
-      ],
-      timeline:[
-        {text:'Pricing summary shared with procurement', time:'4h ago'},
-        {text:'Architecture review signed off by their platform team', time:'yesterday'},
-        {text:'Data residency requirements confirmed', time:'3 days ago'},
-        {text:'Champion moved into the central platform group', time:'1 week ago'}
-      ]
-    },
-    {
-      id:'fairview', slug:'fairview-77d1',
-      name:'Fairview', type:'Renewal', typeKey:'renewal',
-      owner:'Marcus Reed', initials:'MR',
-      stage:'discovery', nextStep:'Discovery', last:'yesterday',
-      value:'$64K', valueFull:'$64,000', amount:64000,
-      scope:[
-        'Renew the current 45-seat plan for 24 months',
-        'Move from monthly to annual billing',
-        'Enable usage reporting for the finance team',
-        'Health-check session with the customer success manager'
-      ],
-      pricing:[
-        {label:'Platform renewal — 45 seats, 12 months', amount:'$70,000'},
-        {label:'Renewal loyalty discount', amount:'−$6,000'}
-      ],
-      total:'$64,000',
-      note:'Renewal window closes in six weeks.',
-      files:[
-        {name:'Fairview_Renewal_Summary.pdf', meta:'180 KB · viewed yesterday'},
-        {name:'Fairview_Usage_Report_Q4.xlsx', meta:'72 KB · viewed 2 days ago'}
-      ],
-      timeline:[
-        {text:'Renewal discovery call booked', time:'yesterday'},
-        {text:'Usage report pulled for the account review', time:'2 days ago'},
-        {text:'Onboarding gaps from the last term flagged', time:'5 days ago'},
-        {text:'Renewal window opened', time:'2 weeks ago'}
-      ]
-    }
-  ];
-
-  /* ---------------- helpers ---------------- */
-  function $(sel){ return document.querySelector(sel); }
-
-  function esc(str){
-    return String(str)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
-  }
-
-  function stageOf(id){
-    for (var i = 0; i < STAGES.length; i++){
-      if (STAGES[i].id === id) return STAGES[i];
-    }
-    return {name:'—', color:'#5C7A9E'};
-  }
-
-  function dealsInStage(id){
-    return DEALS.filter(function(d){ return d.stage === id; });
-  }
-
-  /* ---------------- roll-up strip ---------------- */
-  function renderRollup(){
-    var total = DEALS.reduce(function(sum, d){ return sum + d.amount; }, 0);
-    var totalLabel = '$' + Math.round(total / 1000) + 'K';
-
-    var chips = STAGES.map(function(s){
-      var n = dealsInStage(s.id).length;
-      return '<span class="sc"><span class="dot" style="background:' + s.color + '"></span>' +
-             esc(s.name) + ' <b>' + n + '</b></span>';
-    }).join('');
-
-    $('#rollup').innerHTML =
-      '<div class="stats">' +
-        '<div class="stat"><div class="num">' + DEALS.length + '</div><div class="lbl">Active deals</div></div>' +
-        '<div class="stat"><div class="num">' + STAGES_MOVED_THIS_WEEK + '</div><div class="lbl">Stages moved this week</div></div>' +
-        '<div class="stat"><div class="num">' + totalLabel + '</div><div class="lbl">Pipeline value</div></div>' +
-      '</div>' +
-      '<div class="stage-counts" aria-label="Deals per stage">' + chips + '</div>';
-  }
-
-  /* ---------------- board ---------------- */
-  function dealCard(d){
-    return '<button class="deal-card" type="button" data-deal="' + esc(d.id) + '" ' +
-             'aria-label="Open deal room for ' + esc(d.name) + '">' +
-      '<div class="card-head">' +
-        '<span class="type-badge t-' + esc(d.typeKey) + '">' + esc(d.type) + '</span>' +
-        '<span class="deal-value">' + esc(d.value) + '</span>' +
-      '</div>' +
-      '<h3 class="deal-name">' + esc(d.name) + '</h3>' +
-      '<div class="nextstep">' +
-        icon('arrowRight', 15) +
-        '<span><span class="ns-label">Next step</span>' +
-        '<span class="ns-val">' + esc(d.nextStep) + '</span></span>' +
-      '</div>' +
-      '<div class="card-foot">' +
-        '<span class="owner"><span class="avatar">' + esc(d.initials) + '</span>' + esc(d.owner) + '</span>' +
-        '<span class="time">' + esc(d.last) + '</span>' +
-      '</div>' +
-    '</button>';
-  }
-
-  function renderBoard(){
-    $('#board').innerHTML = STAGES.map(function(s){
-      var deals = dealsInStage(s.id);
-      var body = deals.length
-        ? deals.map(dealCard).join('')
-        : '<div class="col-empty">No deals in this stage</div>';
-
-      return '<section class="col">' +
-        '<div class="col-head">' +
-          '<span class="dot" style="background:' + s.color + '"></span>' +
-          '<span class="col-name">' + esc(s.name) + '</span>' +
-          '<span class="col-count">' + deals.length + '</span>' +
-        '</div>' +
-        '<div class="col-body">' + body + '</div>' +
-      '</section>';
-    }).join('');
-  }
-
-  /* ---------------- deal room panels ---------------- */
-  function panelScope(d){
-    var items = d.scope.map(function(line){
-      return '<li>' + icon('check', 16) + '<span>' + esc(line) + '</span></li>';
-    }).join('');
-    return '<div class="panel"><h2>Scope</h2><ul class="scope">' + items + '</ul></div>';
-  }
-
-  function panelPricing(d){
-    var rows = d.pricing.map(function(row){
-      return '<div class="price-row"><span>' + esc(row.label) + '</span>' +
-             '<span class="amt">' + esc(row.amount) + '</span></div>';
-    }).join('');
-
-    return '<div class="panel"><h2>Pricing</h2>' + rows +
-      '<div class="price-total"><span>Total (12 months)</span>' +
-      '<span class="amt">' + esc(d.total) + '</span></div>' +
-      '<p class="price-note">' + esc(d.note) + '</p></div>';
-  }
-
-  function panelFiles(d){
-    var rows = d.files.map(function(f){
-      return '<div class="file">' +
-        '<span class="file-icon">' + icon('file', 17) + '</span>' +
-        '<span><span class="file-name">' + esc(f.name) + '</span>' +
-        '<span class="file-meta">' + esc(f.meta) + '</span></span>' +
-      '</div>';
-    }).join('');
-
-    return '<div class="panel"><h2>Shared files · ' + d.files.length + '</h2>' + rows + '</div>';
-  }
-
-  function panelFacts(d, stage){
-    var rows =
-      '<div class="fact"><dt>Stage</dt><dd>' +
-        '<span class="dot" style="background:' + stage.color + '"></span>' + esc(stage.name) +
-      '</dd></div>' +
-      '<div class="fact"><dt>Next step</dt><dd>' + esc(d.nextStep) + '</dd></div>' +
-      '<div class="fact"><dt>Owner</dt><dd>' + esc(d.owner) + '</dd></div>' +
-      '<div class="fact"><dt>Deal type</dt><dd>' + esc(d.type) + '</dd></div>' +
-      '<div class="fact"><dt>Annual value</dt><dd>' + esc(d.valueFull) + '</dd></div>' +
-      '<div class="fact"><dt>Last activity</dt><dd>' + esc(d.last) + '</dd></div>';
-
-    return '<div class="panel"><h2>Deal facts</h2><dl class="facts">' + rows + '</dl></div>';
-  }
-
-  function panelActivity(d){
-    var rows = d.timeline.map(function(t){
-      return '<li>' + esc(t.text) + '<span>' + esc(t.time) + '</span></li>';
-    }).join('');
-    return '<div class="panel"><h2>Recent activity</h2><ul class="tl">' + rows + '</ul></div>';
-  }
-
-  /* ---------------- deal room ---------------- */
-  function renderRoom(d){
-    var stage = stageOf(d.stage);
-
-    $('#roomContent').innerHTML =
-      '<div class="room-head">' +
-        '<div class="room-head-main">' +
-          '<div class="badges">' +
-            '<span class="type-badge t-' + esc(d.typeKey) + '">' + esc(d.type) + '</span>' +
-            '<span class="stage-pill"><span class="dot" style="background:' + stage.color + '"></span>' +
-              esc(stage.name) + '</span>' +
-          '</div>' +
-          '<h1 class="room-title">' + esc(d.name) + '</h1>' +
-          '<p class="room-sub">Owner ' + esc(d.owner) + ' · Last activity ' + esc(d.last) +
-            ' · ' + esc(d.valueFull) + ' annual value</p>' +
-        '</div>' +
-        '<a class="btn btn-primary" href="' + CALL_URL + '" target="_blank" rel="noopener">' +
-          'Book a 20-minute call ' + icon('external', 15) +
-        '</a>' +
-      '</div>' +
-
-      '<div class="share">' +
-        '<span class="share-ico">' + icon('link', 16) + '</span>' +
-        '<span class="share-text">' +
-          '<span class="share-label">Shared deal room</span>' +
-          '<code class="share-url">' + ROOM_HOST + '/r/' + esc(d.slug) + '</code>' +
-        '</span>' +
-        '<button class="copy-btn" id="copyBtn" type="button">' + icon('copy', 14) +
-          '<span>Copy link</span></button>' +
-      '</div>' +
-
-      '<div class="room-grid">' +
-        '<div class="room-main">' +
-          panelScope(d) +
-          panelPricing(d) +
-          panelFiles(d) +
-        '</div>' +
-        '<aside class="room-side">' +
-          panelFacts(d, stage) +
-          panelActivity(d) +
-        '</aside>' +
-      '</div>';
-  }
-
-  /* ---------------- navigation ---------------- */
-  var currentDeal = null;
-
-  function showBoard(){
-    currentDeal = null;
-    $('#screen-room').hidden = true;
-    $('#screen-board').hidden = false;
-  }
-
-  function showRoom(deal){
-    if (currentDeal && currentDeal.id === deal.id) return;
-    currentDeal = deal;
-    renderRoom(deal);
-    $('#screen-board').hidden = true;
-    $('#screen-room').hidden = false;
-    try { window.scrollTo({top:0, behavior:'smooth'}); } catch (e) { window.scrollTo(0, 0); }
-  }
-
-  function openDeal(id){
-    var deal = null;
-    for (var i = 0; i < DEALS.length; i++){
-      if (DEALS[i].id === id) deal = DEALS[i];
-    }
-    if (!deal) return;
-    try {
-      if (location.hash !== 'deal=' + id) location.hash = 'deal=' + id;
-    } catch (e) { /* sandboxed contexts may block hash updates */ }
-    showRoom(deal);
-  }
-
-  function goBack(){
-    showBoard();
-    try {
-      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-    } catch (e) { /* ignore */ }
-  }
-
-  function route(){
-    var id = null;
-    try {
-      id = new URLSearchParams(location.hash.replace(/^#/, '')).get('deal');
-    } catch (e) { id = null; }
-
-    var deal = null;
-    for (var i = 0; i < DEALS.length; i++){
-      if (DEALS[i].id === id) deal = DEALS[i];
-    }
-
-    if (deal) showRoom(deal);
-    else showBoard();
-  }
-
-  /* ---------------- copy link ---------------- */
-  function copyText(text){
-    if (navigator.clipboard && navigator.clipboard.writeText){
-      return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return false; });
-    }
-    return Promise.resolve(false);
-  }
-
-  function copyViaTextarea(text){
-    try {
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed';
-      ta.style.top = '-1000px';
-      document.body.appendChild(ta);
-      ta.select();
-      var ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      return ok;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function handleCopy(btn){
-    if (!currentDeal) return;
-    var url = 'https://' + ROOM_HOST + '/r/' + currentDeal.slug;
-    var label = btn.querySelector('span');
-
-    copyText(url).then(function(ok){
-      if (!ok) ok = copyViaTextarea(url);
-      btn.classList.toggle('ok', !!ok);
-      label.textContent = ok ? 'Copied' : 'Copy failed';
-      window.setTimeout(function(){
-        btn.classList.remove('ok');
-        label.textContent = 'Copy link';
-      }, 1900);
+  function updateCounts() {
+    Array.prototype.forEach.call(board.querySelectorAll('.col'), function (col) {
+      var n = col.querySelectorAll('.card').length;
+      col.querySelector('.count').textContent = n;
     });
   }
-
-  /* ---------------- wiring ---------------- */
-  $('#board').addEventListener('click', function(e){
-    var card = e.target.closest ? e.target.closest('.deal-card') : null;
-    if (card) openDeal(card.getAttribute('data-deal'));
-  });
-
-  $('#roomContent').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('#copyBtn') : null;
-    if (btn) handleCopy(btn);
-  });
-
-  $('#backBtn').addEventListener('click', goBack);
-
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && currentDeal) goBack();
-  });
-
-  window.addEventListener('hashchange', route);
-
-  renderRollup();
-  renderBoard();
-  route();
-})();
 </script>
+
 </body>
 </html>
